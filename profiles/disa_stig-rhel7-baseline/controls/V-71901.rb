@@ -71,8 +71,8 @@ lock-delay=uint32 5
 
 After the setting has been set, run dconf update."
 
-describe command("grep -i lock-delay /etc/dconf/db/local.d/*") do
-  its('stdout') { should match /^lock-delay=uint32 \d+\n?$/}
+  describe command("grep -i lock-delay /etc/dconf/db/local.d/*") do
+    its('stdout') { should match /^lock-delay=uint32 \d+\n?$/}
   end
   only_if { package('gnome-desktop3').installed? }
 end

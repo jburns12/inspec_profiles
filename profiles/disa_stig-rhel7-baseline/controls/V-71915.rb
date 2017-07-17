@@ -60,7 +60,7 @@ to have the required value):
 
 maxrepeat = 2"
 
-describe command("grep maxrepeat /etc/security/pwquality.conf") do
-  its('stdout') { should match /^maxrepeat = [0-2]\n?$/}
+  describe command("grep maxrepeat /etc/security/pwquality.conf") do
+    its('stdout') { should match /^maxrepeat = [0-2]\n?$/}
   end
 end

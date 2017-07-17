@@ -60,7 +60,7 @@ the required value):
 
 dcredit = -1"
 
-describe command("grep dcredit /etc/security/pwquality.conf") do
-  its('stdout') { should match /^dcredit = -\d+\n?$/}
+  describe command("grep dcredit /etc/security/pwquality.conf") do
+    its('stdout') { should match /^dcredit = -\d+\n?$/}
   end
 end

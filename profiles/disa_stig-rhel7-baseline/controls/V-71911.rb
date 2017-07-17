@@ -60,7 +60,7 @@ have the required value):
 
 difok = 8"
 
-describe command("grep difok /etc/security/pwquality.conf") do
-  its('stdout') { should match /^difok = \d\d+|[8-9]\n?$/}
+  describe command("grep difok /etc/security/pwquality.conf") do
+    its('stdout') { should match /^difok = \d\d+|[8-9]\n?$/}
   end
 end

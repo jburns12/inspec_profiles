@@ -57,7 +57,7 @@ users from being able to assign themselves empty passwords."
     describe sshd_config do
       its('PermitEmptyPasswords') { should cmp nil}
     end
-  # case where value no is returned
+    # case where value no is returned
     describe sshd_config do
       its('PermitEmptyPasswords') { should match /^no$/}
     end

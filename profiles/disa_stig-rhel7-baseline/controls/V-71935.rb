@@ -60,7 +60,7 @@ have the required value):
 
 minlen = 15"
 
-describe command("grep minlen /etc/security/pwquality.conf") do
-  its('stdout') { should match /^minlen = ([2-9]\d+|1[5-9])\n?$/}
+  describe command("grep minlen /etc/security/pwquality.conf") do
+    its('stdout') { should match /^minlen = ([2-9]\d+|1[5-9])\n?$/}
   end
 end

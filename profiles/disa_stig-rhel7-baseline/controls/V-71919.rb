@@ -56,7 +56,7 @@ password sufficient pam_unix.so sha512
 
 and run the \"authconfig\" command."
 
-describe command("grep password /etc/pam.d/system-auth-ac") do
-  its('stdout') { should match /^password\s+sufficient\s+pam_unix.so .*sha512.*$/}
+  describe command("grep password /etc/pam.d/system-auth-ac") do
+    its('stdout') { should match /^password\s+sufficient\s+pam_unix.so .*sha512.*$/}
   end
 end

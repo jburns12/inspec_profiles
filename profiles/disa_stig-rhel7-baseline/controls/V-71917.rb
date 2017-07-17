@@ -60,7 +60,7 @@ to have the required value):
 
 maxclassrepeat = 4"
 
-describe command("grep maxclassrepeat /etc/security/pwquality.conf") do
-  its('stdout') { should match /^maxclassrepeat = [0-4]\n?$/}
+  describe command("grep maxclassrepeat /etc/security/pwquality.conf") do
+    its('stdout') { should match /^maxclassrepeat = [0-4]\n?$/}
   end
 end

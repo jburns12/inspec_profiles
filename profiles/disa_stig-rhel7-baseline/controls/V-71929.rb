@@ -53,7 +53,7 @@ required value):
 
 PASS_MAX_DAYS     60"
 
-describe login_defs do
-  its('PASS_MAX_DAYS') { should match /^(60|[1-9]|[0-5]\d)$/}
+  describe login_defs do
+    its('PASS_MAX_DAYS') { should match /^(60|[1-9]|[0-5]\d)$/}
   end
 end

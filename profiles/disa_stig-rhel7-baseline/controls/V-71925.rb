@@ -55,7 +55,7 @@ required value):
 
 PASS_MIN_DAYS     1"
 
-describe login_defs do
-  its('PASS_MIN_DAYS') { should match /^\d\d+|[1-9]$/}
+  describe login_defs do
+    its('PASS_MIN_DAYS') { should match /^\d\d+|[1-9]$/}
   end
 end
