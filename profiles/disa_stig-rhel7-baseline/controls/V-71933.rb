@@ -57,7 +57,7 @@ password sufficient pam_unix.so use_authtok sha512 shadow remember=5
 
 and run the \"authconfig\" command."
 
-  describe command("grep -i remember /etc/pam.d/system-auth-ac") do
-    its('stdout') { should match /^password\s+sufficient\s+pam_unix.so .*remember=(\d\d+|[5-9]).*$/}
+  describe file("/etc/pam.d/system-auth-ac") do
+    its('content') { should match /^password\s+sufficient\s+pam_unix.so .*remember=(\d\d+|[5-9]).*\n?$/}
   end
 end

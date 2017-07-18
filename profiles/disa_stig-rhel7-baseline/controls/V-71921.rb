@@ -54,7 +54,7 @@ Add or update the following line in \"/etc/login.defs\":
 
 ENCRYPT_METHOD SHA512"
 
-describe login_defs do
-  its('ENCRYPT_METHOD') { should cmp "SHA512"}
+  describe login_defs do
+    its('ENCRYPT_METHOD') { should cmp "SHA512"}
   end
 end

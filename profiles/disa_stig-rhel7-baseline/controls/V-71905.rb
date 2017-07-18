@@ -69,7 +69,7 @@ fail_interval=900 unlock_time=604800
 
 and run the \"authconfig\" command."
 
-  describe command("grep lcredit /etc/security/pwquality.conf") do
-    its('stdout') { should match /^lcredit = -\d+\n?$/}
+  describe file("/etc/security/pwquality.conf") do
+    its('content') { should match /^lcredit = -\d+\n?$/}
   end
 end

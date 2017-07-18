@@ -57,6 +57,7 @@ the following command:
 
 Remove any occurrences of \"!authenticate\" tags in the file."
 
+  #@todo - need resource for sudoers in order to remove grep
   describe command("grep -i authenticate /etc/sudoers /etc/sudoers.d/*") do
     its('stdout') { should_not match /!authenticate/}
   end

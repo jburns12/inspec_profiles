@@ -60,7 +60,7 @@ have the required value):
 
 ucredit = -1"
 
-  describe command("grep ucredit /etc/security/pwquality.conf") do
-    its('stdout') { should match /^ucredit = -\d+\n?$/}
+  describe file("/etc/security/pwquality.conf") do
+    its('content') { should match /^ucredit = -\d+\n?$/}
   end
 end

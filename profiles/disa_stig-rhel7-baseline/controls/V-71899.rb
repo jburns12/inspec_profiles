@@ -67,8 +67,9 @@ Add the setting to enable screensaver locking after 15 minutes of inactivity:
 
 idle-activation-enabled=true"
 
-describe command("grep -i idle_activation_enabled /etc/dconf/db/local.d/*") do
-  its('stdout') { should match /^\[org\/gnome\/desktop\/screensaver\]\s+idle-activation-enabled=true\n?$/}
+  #@todo - test without grep/*
+  describe command("grep -i idle_activation_enabled /etc/dconf/db/local.d/*") do
+    its('stdout') { should match /^\[org\/gnome\/desktop\/screensaver\]\s+idle-activation-enabled=true\n?$/}
   end
   only_if { package('gnome-desktop3').installed? }
 end

@@ -58,7 +58,7 @@ section of the \"/etc/gdm/custom.conf\" file to \"false\":
 [daemon]
 AutomaticLoginEnable=false"
 
-  describe command("grep -i automaticloginenable /etc/gdm/custom.conf") do
-    its('stdout.strip') { should cmp 'AutomaticLoginEnable=false'}
+  describe file("/etc/gdm/custom.conf") do
+    its('content') { should match /^AutomaticLoginEnable=false\n?$/}
   end
 end

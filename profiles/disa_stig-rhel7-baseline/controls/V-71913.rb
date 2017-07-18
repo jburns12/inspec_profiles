@@ -59,7 +59,7 @@ to have the required value):
 
 minclass = 4"
 
-  describe command("grep minclass /etc/security/pwquality.conf") do
-    its('stdout') { should match /^minclass = \d\d+|[4-9]\n?$/}
+  describe file("/etc/security/pwquality.conf") do
+    its('content') { should match /^minclass = (\d\d+|[4-9])\n?$/}
   end
 end

@@ -110,6 +110,7 @@ the number of characters that can be displayed in the banner:
   [org/gnome/login-screen]
   banner-message-enable=true"
 
+  #@todo - test without grep/*
   describe command("grep banner-message-enable /etc/dconf/db/local.d/*") do
     its('stdout.strip') { should cmp 'banner-message-enable=true'}
   end

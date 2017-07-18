@@ -63,7 +63,7 @@ have the required value):
 
 ocredit = -1"
 
-  describe command("grep ocredit /etc/security/pwquality.conf") do
-    its('stdout') { should match /^ocredit = -\d+\n?$/}
+  describe file("/etc/security/pwquality.conf") do
+    its('content') { should match /^ocredit = -\d+\n?$/}
   end
 end

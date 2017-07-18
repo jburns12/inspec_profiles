@@ -57,7 +57,7 @@ required value):
 
 INACTIVE=0"
 
-  describe command("grep -i inactive /etc/default/useradd") do
-    its('stdout') { should match /^INACTIVE = 0$/}
+  describe file("/etc/default/useradd") do
+    its('content') { should match /^INACTIVE = 0\n$/}
   end
 end
