@@ -67,6 +67,6 @@ by removing the telnet-server package from the system with the following command
 
 # yum remove telnet-server"
   describe package('telnet-server') do
-    it {should_not be_installed}
+    it {should_not be_installed }
   end
 end

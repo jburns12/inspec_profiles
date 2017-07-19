@@ -157,6 +157,6 @@ Reboot the system for the changes to take effect."
   #end
   # @todo - better way to do this?
   describe file('/proc/sys/crypto/fips_enabled') do
-    its('content') { should match /^1\n/}
+    its('content') { should match /^1\n/ }
   end
 end
