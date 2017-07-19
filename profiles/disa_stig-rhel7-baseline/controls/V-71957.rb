@@ -55,6 +55,6 @@ PermitUserEnvironment no
 The SSH service must be restarted for changes to take effect."
 
   describe sshd_config do
-    its('PermitUserEnvironment') { should eq 'no'}
+    its('PermitUserEnvironment') { should eq 'no' }
   end
 end

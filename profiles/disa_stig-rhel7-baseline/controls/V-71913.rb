@@ -60,6 +60,6 @@ to have the required value):
 minclass = 4"
 
   describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^minclass = (\d\d+|[4-9])\n?$/}
+    its('content') { should match /^minclass = (\d\d+|[4-9])\n?$/ }
   end
 end

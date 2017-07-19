@@ -81,8 +81,9 @@ Add the setting to lock the screensaver idle delay:
 
 /org/gnome/desktop/screensaver/idle-delay"
 
+  #@todo - test without grep/*
   describe command("grep -i idle-delay /etc/dconf/db/*/locks/*") do
-    its('stdout.strip') { should_not cmp ""}
+    its('stdout.strip') { should_not cmp "" }
     its('stderr') { should_not match /.*No such file or directory\n?$/ }
   end
   only_if { package('gnome-desktop3').installed? }

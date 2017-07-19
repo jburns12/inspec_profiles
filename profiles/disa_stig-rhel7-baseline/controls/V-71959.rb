@@ -55,6 +55,6 @@ HostbasedAuthentication no
 The SSH service must be restarted for changes to take effect."
 
   describe sshd_config do
-    its('HostbasedAuthentication') { should eq 'no'}
+    its('HostbasedAuthentication') { should eq 'no' }
   end
 end

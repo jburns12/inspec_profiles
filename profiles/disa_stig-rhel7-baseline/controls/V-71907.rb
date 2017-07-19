@@ -61,6 +61,6 @@ the required value):
 dcredit = -1"
 
   describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^dcredit = -\d+\n?$/}
+    its('content') { should match /^dcredit = -\d+\n?$/ }
   end
 end

@@ -59,6 +59,6 @@ section of the \"/etc/gdm/custom.conf\" file to \"false\":
 AutomaticLoginEnable=false"
 
   describe file("/etc/gdm/custom.conf") do
-    its('content') { should match /^AutomaticLoginEnable=false\n?$/}
+    its('content') { should match /^AutomaticLoginEnable=false\n?$/ }
   end
 end

@@ -61,6 +61,6 @@ to have the required value):
 maxrepeat = 2"
 
   describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^maxrepeat = [1-2]\n?$/}
+    its('content') { should match /^maxrepeat = [1-2]\n?$/ }
   end
 end

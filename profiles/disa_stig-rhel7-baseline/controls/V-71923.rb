@@ -56,6 +56,6 @@ Add or update the following line in \"/etc/libuser.conf\" in the [defaults] sect
 crypt_style = sha512"
 
   describe file("/etc/libuser.conf") do
-    its('content') { should match /^crypt_style = sha512\n?$/}
+    its('content') { should match /^crypt_style = sha512\n?$/ }
   end
 end

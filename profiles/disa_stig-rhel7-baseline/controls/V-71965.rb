@@ -87,8 +87,8 @@ required."
 
   #@todo - way to test without using authconfig cmd
   describe command("authconfig --test | grep -i smartcard") do
-    its('stdout') { should match /use only smartcard for login is enabled/}
-    its('stdout') { should match /smartcard module = ".+"/}
-    its('stdout') { should match /smartcard removal action = ".+"/}
+    its('stdout') { should match /use only smartcard for login is enabled/ }
+    its('stdout') { should match /smartcard module = ".+"/ }
+    its('stdout') { should match /smartcard removal action = ".+"/ }
   end
 end

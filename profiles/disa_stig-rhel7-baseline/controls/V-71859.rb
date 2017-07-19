@@ -112,7 +112,7 @@ the number of characters that can be displayed in the banner:
 
   #@todo - test without grep/*
   describe command("grep banner-message-enable /etc/dconf/db/local.d/*") do
-    its('stdout.strip') { should cmp 'banner-message-enable=true'}
+    its('stdout.strip') { should cmp 'banner-message-enable=true' }
   end
   only_if { package('gnome-desktop3').installed? }
 end

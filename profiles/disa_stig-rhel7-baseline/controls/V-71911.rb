@@ -61,6 +61,6 @@ have the required value):
 difok = 8"
 
   describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^difok = (\d\d+|[8-9])\n?$/}
+    its('content') { should match /^difok = (\d\d+|[8-9])\n?$/ }
   end
 end

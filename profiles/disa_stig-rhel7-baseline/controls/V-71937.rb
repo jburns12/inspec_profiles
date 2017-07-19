@@ -57,7 +57,7 @@ prevent logons with empty passwords and run the \"authconfig\" command."
     end
    # case when nullok is commented out
    describe command("grep nullok /etc/pam.d/system-auth-ac") do
-      its('stdout') { should match /^#\s+nullok\s+.*$/}
+      its('stdout') { should match /^#\s+nullok\s+.*$/ }
     end
   end
 end

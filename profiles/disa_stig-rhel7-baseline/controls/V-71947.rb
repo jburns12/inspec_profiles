@@ -63,11 +63,11 @@ Remove any occurrences of \"NOPASSWD\" tags in the file."
   describe.one do
     # case where NOPASSWD line is commented out
     describe command("grep -i nopasswd /etc/sudoers /etc/sudoers.d/*") do
-      its('stdout') { should match /.*#.*NOPASSWD/}
+      its('stdout') { should match /.*#.*NOPASSWD/ }
     end
     # case where NOPASSWD is found in uncommented line
     describe command("grep -i nopasswd /etc/sudoers /etc/sudoers.d/*") do
-      its('stdout') { should_not match /NOPASSWD/}
+      its('stdout') { should_not match /NOPASSWD/ }
     end
   end
 end

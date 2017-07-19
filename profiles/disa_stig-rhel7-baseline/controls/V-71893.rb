@@ -93,8 +93,9 @@ Update the system databases:
 
 Users must log out and back in again before the system-wide settings take effect."
 
+  #@todo - test without grep/*
   describe file("grep -i idle-delay /etc/dconf/db/local.d/*") do
-    its('stdout') { should match /^idle-delay=unit32 (900|[0-8]\d\d|\d\d|\d|)\n?$/}
+    its('stdout') { should match /^idle-delay=unit32 (900|[0-8]\d\d|\d\d|\d|)\n?$/ }
   end
   only_if { package('gnome-desktop3').installed? }
 end

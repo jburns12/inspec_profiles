@@ -64,6 +64,6 @@ have the required value):
 ocredit = -1"
 
   describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^ocredit = -\d+\n?$/}
+    its('content') { should match /^ocredit = -\d+\n?$/ }
   end
 end

@@ -59,7 +59,7 @@ users from being able to assign themselves empty passwords."
     end
     # case where value no is returned
     describe sshd_config do
-      its('PermitEmptyPasswords') { should eq 'no'}
+      its('PermitEmptyPasswords') { should eq 'no' }
     end
   end
 end

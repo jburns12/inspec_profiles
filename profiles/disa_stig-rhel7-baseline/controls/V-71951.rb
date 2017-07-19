@@ -65,6 +65,6 @@ greater:
 FAIL_DELAY 4"
 
   describe login_defs do
-    its('FAIL_DELAY') { should match /\d\d+|[4-9]/}
+    its('FAIL_DELAY') { should match /\d\d+|[4-9]/ }
   end
 end

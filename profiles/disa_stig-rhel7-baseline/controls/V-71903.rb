@@ -61,6 +61,6 @@ have the required value):
 ucredit = -1"
 
   describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^ucredit = -\d+\n?$/}
+    its('content') { should match /^ucredit = -\d+\n?$/ }
   end
 end
