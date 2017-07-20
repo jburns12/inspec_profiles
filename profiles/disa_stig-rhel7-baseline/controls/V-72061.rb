@@ -45,7 +45,11 @@ If a separate entry for \"/var\" is not in use, this is a finding."
   tag "fix": "Migrate the \"/var\" path onto a separate file system."
 
   # @todo fstab resource?
-  describe command('grep /var /etc/fstab') do
-    its('stdout') { should match /^.*.\s+\/var\s+/ }
+  # note: the directory resource is a symlink to the 'file' resource
+  describe directory('/var') do
+    it { should be_mounted }
   end
+  # describe command('grep /var /etc/fstab') do
+  #   its('stdout') { should match /^.*.\s+\/var\s+/ }
+  # end
 end
