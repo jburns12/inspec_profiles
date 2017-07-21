@@ -56,7 +56,7 @@ and set it to \"email\".
 
 space_left_action = email"
 
-  describe auditd_conf  do
+  describe auditd_conf do
     its('space_left_action') { should cmp 'email' }
   end
 end

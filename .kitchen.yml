@@ -21,6 +21,9 @@ platforms:
   - name: centos-7
     driver:
       box: centos/7
+  - name: rhel7
+    driver:
+      box: samdoran/rhel7
 
 suites:
   - name: default
@@ -29,12 +32,12 @@ suites:
     verifier:
       inspec_tests:
         # if you want to use your local code
-        #- file://<%= ENV[('PWD')] %>/profiles/disa_stig-rhel7-baseline
+        - file://<%= ENV[('PWD')] %>/profiles/disa_stig-rhel7-baseline
         # If you want to use your local code on a Windows machine from the parent directory
-        - path: ./profiles/disa_stig-rhel7-baseline
+        #- path: ./profiles/disa_stig-rhel7-baseline
         # if you want to use the current profile in the git repo
         #- git: https://github.com/<...>-baseline.git
       controls:
-        - V-72061
+        - V-72197
      #attrs:
      #  - attributes.yml

@@ -83,6 +83,6 @@ end
 # line that is tested in the results.
 AUDIT_LINES.each do |line|
   describe auditd_rules do
-    its('lines') { should contain_match(%r{#{line}}) }
+    its('lines') { should match %r{#{line}} }
   end
 end

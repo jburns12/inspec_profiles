@@ -89,6 +89,6 @@ Kernel log monitoring must also be configured to properly alert designated staff
 
 The audit daemon must be restarted for the changes to take effect."
   describe auditd_rules  do
-    its('lines') { should contain_match (%r{-f [1-2]}) }
+    its('lines') { should match %r{-f [1-2]} }
   end
 end
