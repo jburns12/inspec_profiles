@@ -66,13 +66,10 @@ fail_interval=900 unlock_time=604800
 
 and run the \"authconfig\" command."
 
-# Two cases in the instance that the lines are switched in password-auth-ac
-describe.one do
-    describe file("/etc/pam.d/password-auth-ac") do
-      its('content') { should match /auth\s+required\s+pam_faillock.so .*even_deny_root.*\nauth\s+\[default=die\]\s+pam_faillock.so.*even_deny_root.*/ }
-    end
-    describe file("/etc/pam.d/password-auth-ac") do
-      its('content') { should match /auth\s+\[default=die\]\s+pam_faillock.so .*even_deny_root.*\nauth\s+required\s+pam_faillock.so.*even_deny_root.*/ }
-    end
+  describe file("/etc/pam.d/password-auth-ac") do
+    its('content') { should match /auth\s+required\s+pam_faillock.so .*even_deny_root.*\nauth\s+\[default=die\]\s+pam_faillock.so.*even_deny_root.*/ }
+  end
+  describe file("/etc/pam.d/password-auth-ac") do
+    its('content') { should match /auth\s+\[default=die\]\s+pam_faillock.so .*even_deny_root.*\nauth\s+required\s+pam_faillock.so.*even_deny_root.*/ }
   end
 end

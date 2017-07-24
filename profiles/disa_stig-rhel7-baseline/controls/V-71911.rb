@@ -60,7 +60,7 @@ have the required value):
 
 difok = 8"
 
-  describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^difok = (\d\d+|[8-9])\n?$/ }
+  describe parse_config_file("/etc/security/pwquality.conf") do
+    its('difok') { should match /^(\d\d+|[8-9])$/ }
   end
 end

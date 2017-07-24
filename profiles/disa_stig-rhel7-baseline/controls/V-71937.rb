@@ -49,7 +49,7 @@ authenticating.
 Remove any instances of the \"nullok\" option in \"/etc/pam.d/system-auth-ac\" to
 prevent logons with empty passwords and run the \"authconfig\" command."
 
-  #@todo - custom resource for system-auth-ac?
+  #@todo - custom resource for pam.d
   describe.one do
     # case when nullok doesn't exist in system-auth-ac
     describe command("grep nullok /etc/pam.d/system-auth-ac") do

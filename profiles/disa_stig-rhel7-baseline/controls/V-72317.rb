@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,18 +12,18 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72317" do
   title "The system must not have unauthorized IP tunnels configured."
-  desc  "IP tunneling mechanisms can be used to bypass network filtering. If 
-tunneling is required, it must be documented with the Information System Security 
+  desc  "IP tunneling mechanisms can be used to bypass network filtering. If
+tunneling is required, it must be documented with the Information System Security
 Officer (ISSO)."
   impact 0.5
   tag "severity": "medium"
@@ -40,7 +40,7 @@ Check to see if \"libreswan\" is installed with the following command:
 # yum list installed libreswan
 openswan-2.6.32-27.el6.x86_64
 
-If \"libreswan\" is installed, check to see if the \"IPsec\" service is active with 
+If \"libreswan\" is installed, check to see if the \"IPsec\" service is active with
 the following command:
 
 # systemctl status ipsec
@@ -57,10 +57,10 @@ conn mytunnel
 # grep -i conn /etc/ipsec.d/*.conf
 conn mytunnel
 
-If there are indications that a \"conn\" parameter is configured for a tunnel, ask 
-the System Administrator if the tunnel is documented with the ISSO. If \"libreswan\" 
-is installed, \"IPsec\" is active, and an undocumented tunnel is active, this is a 
+If there are indications that a \"conn\" parameter is configured for a tunnel, ask
+the System Administrator if the tunnel is documented with the ISSO. If \"libreswan\"
+is installed, \"IPsec\" is active, and an undocumented tunnel is active, this is a
 finding."
-  tag "fix": "Remove all unapproved tunnels from the system, or document them with 
+  tag "fix": "Remove all unapproved tunnels from the system, or document them with
 the ISSO."
 end

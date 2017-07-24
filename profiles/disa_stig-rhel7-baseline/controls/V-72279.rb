@@ -47,6 +47,6 @@ If any \"shosts.equiv\" files are found on the system, this is a finding."
 # rm /[path]/[to]/[file]/shosts.equiv"
 
   describe command('find / -name shots.equiv') do
-    its('stdout') { should eq '' }
+    its('stdout') { should match /^$/ }
   end
 end

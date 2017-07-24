@@ -20,10 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-only_if do
-  package('gnome-desktop3').installed?
-end
-
 control "V-73155" do
   title "The operating system must set the lock delay setting  for all connection
 types."

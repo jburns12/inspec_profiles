@@ -74,8 +74,7 @@ from a repository prior to install by setting the following option in the
 
 gpgcheck=1"
 
-  # @todo - add to yum resource?
-  describe file("/etc/yum.conf") do
-    its('content') { should match /^gpgcheck\s*=\s*1\n?$/ }
+  describe parse_config_file("/etc/yum.conf") do
+    its('gpgcheck') { should cmp '1' }
   end
 end

@@ -60,7 +60,7 @@ have the required value):
 
 minlen = 15"
 
-  describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^minlen = ([2-9]\d+|1[5-9])\n?$/ }
+  describe parse_config_file("/etc/security/pwquality.conf") do
+    its('minlen') { should match /^([2-9]\d+|1[5-9])$/ }
   end
 end

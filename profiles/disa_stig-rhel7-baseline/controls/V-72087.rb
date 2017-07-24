@@ -66,27 +66,11 @@ Uncomment the \"network_failure_action\" option in
 \"/etc/audisp/audisp-remote.conf\" and set it to \"syslog\", \"single\", or
 \"halt\"."
 
-  #@todo - resource for audisp?
-  describe.one do
-    describe file('/etc/audisp/audisp-remote.conf') do
-      its('content') { should match /^disk_full_action = syslog\n?$/ }
-    end
-    describe file('/etc/audisp/audisp-remote.conf') do
-      its('content') { should match /^disk_full_action = single\n?$/ }
-    end
-    describe file('/etc/audisp/audisp-remote.conf') do
-      its('content') { should match /^disk_full_action = halt\n?$/}
-    end
+  describe parse_config_file('/etc/audisp/audisp-remote.conf') do
+    its('disk_full_action') { should match /^(syslog|single|halt)$/ }
   end
-  describe.one do
-    describe file('/etc/audisp/audisp-remote.conf') do
-      its('content') { should match /^network_failure_action = syslog\n?$/}
-    end
-    describe file('/etc/audisp/audisp-remote.conf') do
-      its('content') { should match /^network_failure_action = single\n?$/}
-    end
-    describe file('/etc/audisp/audisp-remote.conf') do
-      its('content') { should match /^network_failure_action = halt\n?$/}
-    end
+
+  describe file('/etc/audisp/audisp-remote.conf') do
+    its('network_failure_action') { should match /^(syslog|single|halt)$/}
   end
 end

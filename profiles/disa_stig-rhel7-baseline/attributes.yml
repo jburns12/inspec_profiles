@@ -83,3 +83,4 @@ audit_lines: [
     %r{^session\s+required\s+pam_unix.so}
   ]
  mfa_pkg_list: ['esc','pam_pkcs11','authconfig-gtk']
+ client_alive_interval: "600"

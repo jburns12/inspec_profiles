@@ -60,7 +60,7 @@ have the required value):
 
 ucredit = -1"
 
-  describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^ucredit = -\d+\n?$/ }
+  describe parse_config_file("/etc/security/pwquality.conf") do
+    its('ucredit') { should match /^-\d+$/ }
   end
 end

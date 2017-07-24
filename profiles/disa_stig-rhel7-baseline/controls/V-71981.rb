@@ -70,8 +70,7 @@ setting the following options in the \"/etc/yum.conf\" file:
 
 repo_gpgcheck=1"
 
-  # @todo - add to yum resource?
-  describe file("/etc/yum.conf") do
-    its('content') { should match /^repo_gpgcheck\s*=\s*1\n?$/ }
+  describe parse_config_file("/etc/yum.conf") do
+    its('repo_gpgcheck') { should cmp '1' }
   end
 end

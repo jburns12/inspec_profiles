@@ -60,7 +60,7 @@ to have the required value):
 
 maxclassrepeat = 4"
 
-  describe file("/etc/security/pwquality.conf") do
-    its('content') { should match /^maxclassrepeat = [1-4]\n?$/ }
+  describe parse_config_file("/etc/security/pwquality.conf") do
+    its('maxclassrepeat') { should match /^[1-4]$/ }
   end
 end

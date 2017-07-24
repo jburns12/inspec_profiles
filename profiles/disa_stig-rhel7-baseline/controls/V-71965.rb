@@ -85,7 +85,6 @@ line:
 Modify the \"/etc/pam_pkcs11/pam_pkcs11.conf\" file to use the cackey module if
 required."
 
-  #@todo - way to test without using authconfig cmd
   describe command("authconfig --test | grep -i smartcard") do
     its('stdout') { should match /use only smartcard for login is enabled/ }
     its('stdout') { should match /smartcard module = ".+"/ }

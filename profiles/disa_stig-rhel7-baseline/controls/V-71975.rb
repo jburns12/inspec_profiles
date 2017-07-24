@@ -1,4 +1,4 @@
-# encoding: utf-8 
+# encoding: utf-8
 #
 =begin
 -----------------
@@ -19,6 +19,12 @@ Source: STIG.DOD.MIL
 uri: http://iase.disa.mil
 -----------------
 =end
+
+FILE_INTEG_TOOL = attribute(
+  'file_integ_tool',
+  default: 'aide',
+  description: "Tool used to determine file integrity"
+)
 
 control "V-71975" do
   title "Designated personnel must be notified if baseline configurations are
@@ -89,4 +95,16 @@ send email at the completion of the analysis.
 # more /etc/cron.daily/aide
 0 0 * * * /usr/sbin/aide --check | /bin/mail -s \"$HOSTNAME - Daily aide integrity
 check run\" root@sysname.mil"
+
+  describe package(FILE_INTEG_TOOL) do
+    it { should be_installed }
+  end
+  describe.one do
+    describe file("cat /etc/cron.daily/#{FILE_INTEG_TOOL}") do
+      its('content') { should match /\/bin\/mail/ }
+    end
+    describe file("/etc/cron.weekly/#{FILE_INTEG_TOOL}") do
+      its('content') { should match /\/bin\/mail/ }
+    end
+  end
 end

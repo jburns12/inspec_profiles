@@ -74,8 +74,7 @@ file:
 
 localpkg_gpgcheck=1"
 
-  # @todo - add to yum resource?
-  describe file("/etc/yum.conf") do
-    its('content') { should match /^localpkg_gpgcheck\s*=\s*1\n?$/ }
+  describe parse_config_file("/etc/yum.conf") do
+    its('localpkg_gpgcheck') { should cmp '1' }
   end
 end

@@ -66,4 +66,11 @@ auth        [default=die]  pam_faillock.so authfail audit deny=3 even_deny_root
 fail_interval=900 unlock_time=604800
 
 and run the \"authconfig\" command."
+
+  describe file('/etc/pam.d/password-auth-ac') do
+    its('stdout') { should match /^auth\s+required\s+pam_faillock.so\s.*unlock_time=604800/ }
+  end
+  describe file('/etc/pam.d/password-auth-ac') do
+    its('stdout') { should match /^auth\s+\[default=die\]\s+pam_faillock.so\s.*unlock_time=604800/ }
+  end
 end

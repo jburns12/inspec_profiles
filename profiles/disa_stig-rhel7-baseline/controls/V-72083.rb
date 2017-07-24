@@ -61,8 +61,7 @@ different system or media from the system being audited.
 Set the remote server option in \"/etc/audisp/audisp-remote.conf\" with the IP
 address of the log aggregation server."
 
-  #@todo - resource for audisp?
-  describe file('/etc/audisp/audisp-remote.conf') do
-    its('content') { should match /^remote_server = .*\n?$/ }
+  describe parse_config_file('/etc/audisp/audisp-remote.conf') do
+    its('remote_server') { should match /^.+$/ }
   end
 end

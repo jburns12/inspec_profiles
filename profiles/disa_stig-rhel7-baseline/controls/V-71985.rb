@@ -65,7 +65,7 @@ If \"autofs\" is required for Network File System (NFS), it must be documented w
 the ISSO."
 
   #@todo - test with system with autofs installed
-  describe service('autofs') do
+  describe systemd_service('autofs.service') do
     it {should_not be_running }
   end
 end

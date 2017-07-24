@@ -63,7 +63,7 @@ it with the following line:
 enable_krb5 = yes"
 
   #@todo - resource for audisp?
-  describe file('/etc/audisp/audisp-remote.conf') do
-    its('content') { should match /^enable_krb5 = yes\n?$/ }
+  describe parse_config_file('/etc/audisp/audisp-remote.conf') do
+    its('enable_krb5') { should cmp 'yes' }
   end
 end

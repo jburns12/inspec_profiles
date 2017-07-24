@@ -57,7 +57,7 @@ required value):
 
 INACTIVE=0"
 
-  describe file("/etc/default/useradd") do
-    its('content') { should match /^INACTIVE = 0\n$/ }
+  describe parse_config_file("/etc/default/useradd") do
+    its('INACTIVE') { should cmp '0' }
   end
 end

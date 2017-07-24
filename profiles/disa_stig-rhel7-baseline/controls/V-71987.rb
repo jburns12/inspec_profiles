@@ -53,16 +53,7 @@ file:
 
 clean_requirements_on_remove=1"
 
-  # @todo - add to yum resource?
-  describe.one do
-    describe file("/etc/yum.conf") do
-      its('content') { should match /^clean_requirements_on_remove\s*=\s*1\n?$/ }
-    end
-    describe file("/etc/yum.conf") do
-      its('content') { should match /^clean_requirements_on_remove\s*=\s*True\n?$/ }
-    end
-    describe file("/etc/yum.conf") do
-      its('content') { should match /^clean_requirements_on_remove\s*=\s*yes\n?$/ }
-    end
+  describe parse_config_file("/etc/yum.conf") do
+    its('clean_requirements_on_remove') { should match /^(1|True|yes)$/ }
   end
 end

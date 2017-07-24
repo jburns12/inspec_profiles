@@ -53,6 +53,6 @@ value):
 net.ipv4.conf.default.accept_source_route = 0"
 
   describe kernel_parameter('net.ipv4.conf.default.accept_source_route') do
-    its('value') { should eq 1 }
+    its('value') { should eq 0 }
   end
 end
