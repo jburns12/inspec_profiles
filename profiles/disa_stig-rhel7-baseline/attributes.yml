@@ -85,3 +85,4 @@ audit_lines: [
  mfa_pkg_list: ['esc','pam_pkcs11','authconfig-gtk']
  client_alive_interval: "600"
  system_db_path: '/etc/dconf/db/local.d'
+ log_pkg_path: '/etc/rsyslog.conf'

@@ -49,7 +49,4 @@ If a separate entry for \"/var\" is not in use, this is a finding."
   describe directory('/var') do
     it { should be_mounted }
   end
-  # describe command('grep /var /etc/fstab') do
-  #   its('stdout') { should match /^.*.\s+\/var\s+/ }
-  # end
 end

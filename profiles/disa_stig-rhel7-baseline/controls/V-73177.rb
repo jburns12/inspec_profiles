@@ -69,6 +69,6 @@ control "V-73177" do
     # nmcli radio wifi off"
 
     describe command('nmcli device') do
-      its('stdout.strip') { should not_match /wifi connected/}
+      its('stdout.strip') { should not_match /wifi connected/ }
     end
 end

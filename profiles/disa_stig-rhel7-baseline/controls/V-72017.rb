@@ -56,8 +56,11 @@ Note: The example will be for the user \"smithj\".
 
 # chmod 0750 /home/smithj"
 
-  #passwd.homes.each do |home|
-  #  describe file(home) do
-  #    its('mode') { should cmp "0750" }
-  #  end
+  # @todo - allow for perms less privileged than 750
+  home_dirs = command('ls -d /home/*').stdout.split("\n")
+  home_dirs.each do |home|
+    describe file(home) do
+      its('mode') { should cmp "750" }
+    end
+  end
 end
