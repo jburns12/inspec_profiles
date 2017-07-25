@@ -1,4 +1,4 @@
-# encoding: utf-8 
+# encoding: utf-8
 #
 =begin
 -----------------
@@ -80,4 +80,16 @@ And then make the file immutable with the following command:
 If the \"/etc/resolv.conf\" file must be mutable, the required configuration must be
 documented with the Information System Security Officer (ISSO) and the file must be
 verified by the system file integrity tool."
+
+  # @todo - set up tests where determine if local/dns and then carry out test
+  describe.one do
+    # Case when local auth used
+    describe file("/etc/resolve.conf") do
+      it('size') { should match eq 0 }
+    end
+    # Case when DNS used
+    describe command("grep -namserver /etc/resolv.conf") do
+      its('stdout.strip') { should match /^nameserver .+\s*\nnameserver .+\s*\n?$/}
+    end
+  end
 end

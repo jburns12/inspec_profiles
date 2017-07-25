@@ -71,7 +71,7 @@ file controlling the execution of the \"ntpdate\" command.
 
 # grep –l ntpdate /etc/cron.daily
 
-# ls -al /etc/cron.* | grep aide
+# ls -al /etc/cron.* | grep ntp
 ntp
 
 If a crontab file does not exist in the \"/etc/cron.daily\" that executes the
@@ -89,4 +89,16 @@ If NTP was not running, it must be started:
 
 # systemctl start ntpd"
 
+  describe service('ntpd') do
+    it { should be_running }
+  end
+  describe.one do
+    describe command('grep maxpoll /etc/ntp.conf') do
+      its('stdout.strip') { should_not match /^maxpoll\s+17$/ }
+    end
+    # Case where maxpoll empty @todo - test for empty maxpoll
+    describe file('/etc/cron.daily/ntpdate') do
+      it { should exist }
+    end
+  end
 end

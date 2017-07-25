@@ -48,7 +48,7 @@ ipsec.service - Internet Key Exchange (IKE) Protocol Daemon for IPsec
    Loaded: loaded (/usr/lib/systemd/system/ipsec.service; disabled)
    Active: inactive (dead)
 
-If the \"IPsec\" service is active, check to see if any tunnels are configured in 
+If the \"IPsec\" service is active, check to see if any tunnels are configured in
 \"/etc/ipsec.conf\" and \"/etc/ipsec.d/\" with the following commands:
 
 # grep -i conn /etc/ipsec.conf
@@ -63,4 +63,31 @@ is installed, \"IPsec\" is active, and an undocumented tunnel is active, this is
 finding."
   tag "fix": "Remove all unapproved tunnels from the system, or document them with
 the ISSO."
+
+  # @todo - a way to dynamically check tunnels and not assume there will only be one result
+  approved_tunnels = yaml(content: inspec.profile.file('approved_tunnels.yml')).params
+  describe.one do
+    describe command("grep -i conn /etc/ipsec.conf") do
+      its('stdout.strip') { should match /^conn #{approved_tunnels[0]['tunnel_name']}$/ }
+    end
+    describe command("grep -i conn /etc/ipsec.conf") do
+      its('stdout.strip') { should match /^conn #{approved_tunnels[1]['tunnel_name']}$/ }
+    end
+    describe command("grep -i conn /etc/ipsec.conf") do
+      its('stdout.strip') { should match /^$/ }
+    end
+  end
+  describe.one do
+    describe command("grep -i conn /etc/ipsec.d/*.conf") do
+      its('stdout.strip') { should match /^conn #{approved_tunnels[0]['tunnel_name']}$/ }
+    end
+    describe command("grep -i conn /etc/ipsec.d/*.conf") do
+      its('stdout.strip') { should match /^conn #{approved_tunnels[1]['tunnel_name']}$/ }
+    end
+    describe command("grep -i conn /etc/ipsec.d/*.conf") do
+      its('stdout.strip') { should match /^$/ }
+    end
+  end
+  only_if { package('libreswan').installed? }
+  only_if { service('ipsec.service').running? }
 end
