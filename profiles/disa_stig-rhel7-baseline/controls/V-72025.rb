@@ -66,9 +66,10 @@ Note: The example will be for the user smithj, who has a home directory of
 
 # chgrp users /home/smithj/<file>"
 
+  # Assumption - users' home directories created in "home"
   home_dirs = command('ls -d /home/*').stdout.split("\n")
   home_dirs.each do |home|
-    home_files = command("find #{home}").stdout.split("\n")
+    home_files = command("find #{home} ! -name '.*'").stdout.split("\n")
     home_user = home.split("/")
     user_groups = command("groups #{home_user[2]}").stdout.split(" ")
     user_groups.delete_at(0)

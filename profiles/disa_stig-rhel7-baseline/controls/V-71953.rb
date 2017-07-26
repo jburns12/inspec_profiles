@@ -58,7 +58,7 @@ section of the \"/etc/gdm/custom.conf\" file to \"false\":
 [daemon]
 AutomaticLoginEnable=false"
 
-  describe file("/etc/gdm/custom.conf") do
-    its('content') { should match /^AutomaticLoginEnable=false\n?$/ }
+  describe parse_config_file("/etc/gdm/custom.conf") do
+    its('AutomaticLoginEnable') { should eq 'false' }
   end
 end

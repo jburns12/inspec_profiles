@@ -57,6 +57,7 @@ Note: The example will be for the smithj user, who has a home directory of
 
 # chown smithj /home/smithj/.*"
 
+  # Assumption - users' home directories created in "home"
   home_dirs = command('ls -d /home/*').stdout.split("\n")
   home_dirs.each do |home|
     home_files = command("find #{home} -name '.*'").stdout.split("\n")

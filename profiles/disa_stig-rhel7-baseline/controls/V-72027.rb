@@ -58,10 +58,11 @@ Note: The example will be for the user smithj, who has a home directory of
 
 # chmod 0750 /home/smithj/<file>"
 
-  # @todo - allow for perms less privileged than 750
+  # Assumption - users' home directories created in "home"
+  # @todo - allow for perms less permissive than 750
   home_dirs = command('ls -d /home/*').stdout.split("\n")
   home_dirs.each do |home|
-    home_files = command("find #{home}").stdout.split("\n")
+    home_files = command("find #{home} ! -name '.*'").stdout.split("\n")
     home_user = home.split("/")
     home_files.each do |curr_file|
       describe file(curr_file) do

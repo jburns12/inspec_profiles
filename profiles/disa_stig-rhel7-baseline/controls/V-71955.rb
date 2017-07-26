@@ -57,7 +57,7 @@ of the \"/etc/gdm/custom.conf\" file to \"false\":
 [daemon]
 TimedLoginEnable=false"
 
-  describe file("/etc/gdm/custom.conf") do
-    its('content') { should match /^TimedLoginEnable=false\n?$/ }
+  describe parse_config_file("/etc/gdm/custom.conf") do
+    its('TimedLoginEnable') { should eq 'false' }
   end
 end

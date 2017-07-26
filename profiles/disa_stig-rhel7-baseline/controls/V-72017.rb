@@ -56,6 +56,7 @@ Note: The example will be for the user \"smithj\".
 
 # chmod 0750 /home/smithj"
 
+  # Assumption - users' home directories created in "home"
   # @todo - allow for perms less privileged than 750
   home_dirs = command('ls -d /home/*').stdout.split("\n")
   home_dirs.each do |home|

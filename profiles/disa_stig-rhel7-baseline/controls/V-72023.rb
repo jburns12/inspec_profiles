@@ -59,9 +59,10 @@ Note: The example will be for the user smithj, who has a home directory of
 
 # chown smithj /home/smithj/<file or directory>"
 
+  # Assumption - users' home directories created in "home"
   home_dirs = command('ls -d /home/*').stdout.split("\n")
   home_dirs.each do |home|
-    home_files = command("find #{home}").stdout.split("\n")
+    home_files = command("find #{home} ! -name '.*'").stdout.split("\n")
     home_user = home.split("/")
     home_files.each do |curr_file|
       describe file(curr_file) do
