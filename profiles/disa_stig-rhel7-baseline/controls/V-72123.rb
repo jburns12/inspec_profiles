@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 CREAT_AUDIT_LINE_32 = attribute(
   'creat_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S creat .*-F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access',
+  default: '^-a always,exit -F arch=b32 .*-S creat .*-F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit creat command on a 32-bit architecture"
 )
 
 CREAT_AUDIT_LINE_64 = attribute(
   'creat_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S creat .*-F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access',
+  default: '^-a always,exit -F arch=b64 .*-S creat .*-F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit creat command on a 64-bit architecture"
 )
 

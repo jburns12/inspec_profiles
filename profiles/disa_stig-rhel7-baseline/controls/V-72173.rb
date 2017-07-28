@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 UMOUNT_AUDIT_LINE = attribute(
   'umount_audit_line',
-  default: '^-a always,exit -F path=/bin/umount -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-mount',
+  default: '^-a always,exit -F path=/bin/umount -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit umount command"
 )
 

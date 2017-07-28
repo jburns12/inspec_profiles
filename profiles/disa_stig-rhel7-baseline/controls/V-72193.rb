@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 RMMOD_AUDIT_LINE = attribute(
   'rmmod_audit_line',
-  default: '^-w /sbin/rmmod -p x -F auid!=4294967295 -k module.+',
+  default: '^-w /sbin/rmmod -p x -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit rmmod command"
 )
 

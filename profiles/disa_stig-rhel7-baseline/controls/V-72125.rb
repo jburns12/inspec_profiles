@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 OPEN_AUDIT_LINE_32 = attribute(
   'open_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S open .*-F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access',
+  default: '^-a always,exit -F arch=b32 .*-S open .*-F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit open command on a 32-bit architecture"
 )
 
 OPEN_AUDIT_LINE_64 = attribute(
   'open_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S open .*-F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access',
+  default: '^-a always,exit -F arch=b64 .*-S open .*-F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit open command on a 64-bit architecture"
 )
 

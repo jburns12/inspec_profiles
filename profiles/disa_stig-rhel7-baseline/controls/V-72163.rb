@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 SUDOERS_AUDIT_LINE = attribute(
   'sudoers_audit_line',
-  default: '^-w /etc/sudoers -p wa -k privileged-actions',
+  default: '^-w /etc/sudoers -p wa -k \S+\n?$',
   description: "The line that you use to audit sudoers command"
 )
 
 SUDOERS_D_AUDIT_LINE = attribute(
   'sudoers_d_audit_line',
-  default: '^-w /etc/sudoers.d -p wa -k privileged-actions',
+  default: '^-w /etc/sudoers.d -p wa -k \S+\n?$',
   description: "The line that you use to audit sudoers.d command"
 )
 

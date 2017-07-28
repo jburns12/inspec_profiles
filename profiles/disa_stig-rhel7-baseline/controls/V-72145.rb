@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 FAILLOCK_AUDIT_LINE = attribute(
   'faillock_audit_line',
-  default: '^-w /var/run/faillock -p wa -k logins',
+  default: '^-w /var/run/faillock -p wa -k \S+\n?$',
   description: "The line that you use to verify the generation of audit records for unsuccesful account access events"
 )
 

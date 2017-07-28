@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 INIT_MODULE_AUDIT_LINE_32 = attribute(
   'init_module_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S init_module .*-k module.+',
+  default: '^-a always,exit -F arch=b32 .*-S init_module .*-k \S+\n?$',
   description: "The line that you use to audit the init_module command on a 32-bit architecture."
 )
 
 INIT_MODULE_AUDIT_LINE_64 = attribute(
   'init_module_audit_line_64',
-  default: '^-a always,exit -F arch=b64 -S init_module .*-k module.+',
+  default: '^-a always,exit -F arch=b64 -S init_module .*-k \S+\n?$',
   description: "The line that you use to audit the init_module command on a 64-bit architecture."
 )
 

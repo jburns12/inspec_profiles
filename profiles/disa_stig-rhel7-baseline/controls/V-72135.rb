@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 SEMANAGE_AUDIT_LINE = attribute(
   'semanage_audit_line',
-  default: '^-a always,exit -F path=/usr/sbin/semanage -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-priv_change',
+  default: '^-a always,exit -F path=/usr/sbin/semanage -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit semanage command"
 )
 

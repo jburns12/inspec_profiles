@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 SETXATTR_AUDIT_LINE_32 = attribute(
   'setxattr_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S setxattr .*-F auid>=1000 -F auid!=4294967295 -k perm_mod',
+  default: '^-a always,exit -F arch=b32 .*-S setxattr .*-F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the setxattr command on a 32-bit architecture."
 )
 
 SETXATTR_AUDIT_LINE_64 = attribute(
   'setxattr_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S setxattr .*-F auid>=1000 -F auid!=4294967295 -k perm_mod',
+  default: '^-a always,exit -F arch=b64 .*-S setxattr .*-F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the setxattr command on a 64-bit architecture."
 )
 

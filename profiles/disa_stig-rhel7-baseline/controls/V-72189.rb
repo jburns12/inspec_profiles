@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 DELETE_MODULE_AUDIT_LINE_32 = attribute(
   'delete_module_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S delete_module .*-k module.+',
+  default: '^-a always,exit -F arch=b32 .*-S delete_module .*-k \S+\n?$',
   description: "The line that you use to audit the delete_module command on a 32-bit architecture."
 )
 
 DELETE_MODULE_AUDIT_LINE_64 = attribute(
   'delete_module_audit_line_64',
-  default: '^-a always,exit -F arch=b64 -S delete_module .*-k module.+',
+  default: '^-a always,exit -F arch=b64 -S delete_module .*-k \S+\n?$',
   description: "The line that you use to audit the delete_module command on a 64-bit architecture."
 )
 
@@ -72,7 +72,7 @@ architecture), this is a finding.
 
 If the command does not return any output, this is a finding."
   tag "fix": "Configure the operating system to generate audit records when
-successful/unsuccessful attempts to use the \"delete_module\" command occur. 
+successful/unsuccessful attempts to use the \"delete_module\" command occur.
 
 Add or update the following rules in \"/etc/audit/rules.d/audit.rules\" (removing
 those that do not match the CPU architecture):

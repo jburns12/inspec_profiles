@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 MOUNT_AUDIT_LINE_32 = attribute(
   'mount_audit_line_32',
-  default: '^-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k privileged-mount',
+  default: '^-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit mount command on a 32-bit architecture"
 )
 
 MOUNT_AUDIT_LINE_64 = attribute(
   'mount_audit_line_64',
-  default: '^-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k privileged-mount',
+  default: '^-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit mount command on a 64-bit architecture"
 )
 

@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 CRONTAB_AUDIT_LINE = attribute(
   'crontab_audit_line',
-  default: '^-a always,exit -F path=/usr/bin/crontab -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-cron',
+  default: '^-a always,exit -F path=/usr/bin/crontab -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit crontab command"
 )
 

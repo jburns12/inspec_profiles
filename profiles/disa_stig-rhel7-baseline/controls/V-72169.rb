@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 SUDOEDIT_AUDIT_LINE = attribute(
   'sudoedit_audit_line',
-  default: '^-a always,exit -F path=/bin/sudoedit -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-priv_change',
+  default: '^-a always,exit -F path=/bin/sudoedit -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit sudoedit command"
 )
 

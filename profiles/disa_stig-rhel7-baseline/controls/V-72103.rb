@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 FCHOWNAT_AUDIT_LINE_32 = attribute(
   'fchownat_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S fchownat .*-F auid>=1000 -F auid!=4294967295 -k perm_mod',
+  default: '^-a always,exit -F arch=b32 .*-S fchownat .*-F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the fchownat command on a 32-bit architecture."
 )
 
 FCHOWNAT_AUDIT_LINE_64 = attribute(
   'fchownat_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S fchmownat .*-F auid>=1000 -F auid!=4294967295 -k perm_mod',
+  default: '^-a always,exit -F arch=b64 .*-S fchmownat .*-F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the fchmownat command on a 64-bit architecture."
 )
 

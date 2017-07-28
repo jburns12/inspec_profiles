@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 PASSWD_AUDIT_LINE = attribute(
   'passwd_audit_line',
-  default: '^-a always,exit -F path=/usr/bin/passwd -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-passwd',
+  default: '^-a always,exit -F path=/usr/bin/passwd -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit passwd command"
 )
 

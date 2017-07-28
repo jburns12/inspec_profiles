@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 TALLYLOG_AUDIT_LINE = attribute(
   'tallylog_audit_line',
-  default: '^-w /var/log/tallylog -p wa -k logins',
+  default: '^-w /var/log/tallylog -p wa -k \S+\n?$',
   description: "The line that you use to verify generation of audit records for all account access count events"
 )
 

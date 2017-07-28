@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 LASTLOG_AUDIT_LINE = attribute(
   'lastlog_audit_line',
-  default: '^-w /var/log/lastlog -p wa -k logins',
+  default: '^-w /var/log/lastlog -p wa -k \S+\n?$',
   description: "The line that you use to verify the generation of audit records for succesful account access events"
 )
 

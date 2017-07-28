@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 POSTDROP_AUDIT_LINE = attribute(
   'postdrop_audit_line',
-  default: '^-a always,exit -F path=/usr/sbin/postdrop -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-postfix',
+  default: '^-a always,exit -F path=/usr/sbin/postdrop -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit postdrop command"
 )
 

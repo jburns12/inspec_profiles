@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 FCHMODAT_AUDIT_LINE_32 = attribute(
   'fchmodat_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S fchmodat .*-F auid>=1000 -F auid!=4294967295 -k perm_mod',
+  default: '^-a always,exit -F arch=b32 .*-S fchmodat .*-F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the fchmodat command on a 32-bit architecture."
 )
 
 FCHMODAT_AUDIT_LINE_64 = attribute(
   'fchmodat_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S fchmodat .*-F auid>=1000 -F auid!=4294967295 -k perm_mod',
+  default: '^-a always,exit -F arch=b64 .*-S fchmodat .*-F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the fchmodat command on a 64-bit architecture."
 )
 

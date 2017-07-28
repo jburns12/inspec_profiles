@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 SSH_KEYSIGN_AUDIT_LINE = attribute(
   'ssh_keysign_audit_line',
-  default: '^-a always,exit -F path=/usr/libexec/openssh/ssh-keysign -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-ssh',
+  default: '^-a always,exit -F path=/usr/libexec/openssh/ssh-keysign -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit ssh-keysign command"
 )
 

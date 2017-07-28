@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 MODPROBE_AUDIT_LINE = attribute(
   'modprobe_audit_line',
-  default: '^-w /sbin/modprobe -p x -F auid!=4294967295 -k module.+',
+  default: '^-w /sbin/modprobe -p x -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit modprobe command"
 )
 

@@ -23,8 +23,8 @@ uri: http://iase.disa.mil
 ETC_PASSWD_AUDIT_LINES = attribute(
   'etc_passwd_audit_line',
   default: [
-    '^-w /etc/passwd -p wa -k identity',
-    '^-w /etc/passwd -p wa -k audit_rules_usergroup_modification'
+    '^-w /etc/passwd -p wa -k \S+\n?$',
+    '^-w /etc/passwd -p wa -k \S+\n?$'
   ],
   description: "The line that you use to verify generation of audit records for events affecting /etc/passwd"
 )

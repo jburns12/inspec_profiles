@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 RENAMEAT_AUDIT_LINE_32 = attribute(
   'renameat_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S renameat .*-F perm=x -F auid>=1000 -F auid!=4294967295 -k delete',
+  default: '^-a always,exit -F arch=b32 .*-S renameat .*-F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the renameat command on a 32-bit architecture."
 )
 
 RENAMEAT_AUDIT_LINE_64 = attribute(
   'renameat_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S renameat .*-F perm=x -F auid>=1000 -F auid!=4294967295 -k delete',
+  default: '^-a always,exit -F arch=b64 .*-S renameat .*-F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the renameat command on a 64-bit architecture."
 )
 

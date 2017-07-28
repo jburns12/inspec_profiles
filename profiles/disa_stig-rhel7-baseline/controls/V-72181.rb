@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 PT_CHOWN_AUDIT_LINE = attribute(
   'pt_chown_audit_line',
-  default: '^-a always,exit -F path=/usr/libexec/pt_chown -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged_terminal',
+  default: '^-a always,exit -F path=/usr/libexec/pt_chown -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit pt_chown command"
 )
 

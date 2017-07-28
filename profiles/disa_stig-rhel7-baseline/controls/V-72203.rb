@@ -22,13 +22,13 @@ uri: http://iase.disa.mil
 
 RMDIR_AUDIT_LINE_32 = attribute(
   'rmdir_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S rmdir .*-F perm=x -F auid>=1000 -F auid!=4294967295 -k delete',
+  default: '^-a always,exit -F arch=b32 .*-S rmdir .*-F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the rmdir command on a 32-bit architecture."
 )
 
 RMDIR_AUDIT_LINE_64 = attribute(
   'rmdir_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S rmdir .*-F perm=x -F auid>=1000 -F auid!=4294967295 -k delete',
+  default: '^-a always,exit -F arch=b64 .*-S rmdir .*-F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit the rmdir command on a 64-bit architecture."
 )
 

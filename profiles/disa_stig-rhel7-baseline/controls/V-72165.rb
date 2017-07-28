@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 NEWGRP_AUDIT_LINE = attribute(
   'newgrp_audit_line',
-  default: '^-a always,exit -F path=/usr/bin/newgrp -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-priv_change',
+  default: '^-a always,exit -F path=/usr/bin/newgrp -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
   description: "The line that you use to audit newgrp command"
 )
 

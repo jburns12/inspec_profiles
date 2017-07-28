@@ -22,7 +22,7 @@ uri: http://iase.disa.mil
 
 PAM_TIMESTAMP_CHECK_AUDIT_LINE = attribute(
   'pam_timestamp_check_audit_line',
-  default: '^-a always,exit -F path=/sbin/pam_timestamp_check -F perm=x -F auid>=1000 -F auid!=4294967295  -k privileged-pam',
+  default: '^-a always,exit -F path=/sbin/pam_timestamp_check -F perm=x -F auid>=1000 -F auid!=4294967295  -k \S+\n?$',
   description: "The line that you use to audit pam_timestamp_check command"
 )
 

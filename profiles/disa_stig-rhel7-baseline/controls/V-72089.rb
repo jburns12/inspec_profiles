@@ -100,7 +100,6 @@ percent of the partition size."
   # Convert to MB and get 25%
   exp_space_left = partition_sz.to_i * 1024 / 4
 
-  # Space left should
   describe auditd_conf do
     its('space_left.to_i') { should cmp "#{exp_space_left}".to_i}
   end
