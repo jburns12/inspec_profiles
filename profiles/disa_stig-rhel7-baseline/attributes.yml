@@ -86,3 +86,4 @@ audit_lines: [
  client_alive_interval: "600"
  system_db_path: '/etc/dconf/db/local.d'
  log_pkg_path: '/etc/rsyslog.conf'
+ rhel7_fs_opts: ['xfs', 'ext4', 'swap', 'tmpfs']
