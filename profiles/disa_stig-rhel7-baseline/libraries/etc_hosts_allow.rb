@@ -9,7 +9,7 @@ class EtcHostsAllow < Inspec::resource(1)
   describe etc_hosts_allow().where { daemon_list == 'ALL' } do
     its('daemon_list') { should eq ['ALL'] }
     its('client_list') { should eq ['127.0.0.1 [::1]'] }
-    its('shell_command') { should eq [''] }
+    its('options') { should eq [''] }
   end"
 
   attr_reader :params
@@ -29,7 +29,7 @@ class EtcHostsAllow < Inspec::resource(1)
         .add_accessor(:entries)
         .add(:daemon_list,        field: 'daemon_list')
         .add(:client_list, field: 'client_list')
-        .add(:shell_command,     field: 'shell_command')
+        .add(:options,     field: 'options')
 
   filter.connect(self, :params)
 
@@ -60,14 +60,14 @@ class EtcHostsAllow < Inspec::resource(1)
   def parse_line(line)
     daemon_list = ''
     client_list = ''
-    shell_command = ''
+    options = ''
 
     # If the line contains an ipv6 address, parse using a different
     # algorithm. ipv6 addresses will containt a '['
     if line.index('[') != nil
       daemon_list = line.split(':')[0].strip
 
-      # Determines if there contains any shell commands in the line
+      # Determines if there contains any options in the line
       if line.rindex(':') > line.rindex(']')
         # First get a substring starting at the beginning and going to the
         # end of the client_list. Then get a substring containing only the client_list
@@ -76,29 +76,32 @@ class EtcHostsAllow < Inspec::resource(1)
         client_list = line[0, line.index(':', line.rindex(']'))-1].strip
         client_list = client_list[client_list.index(':') + 1, client_list.length].strip
         # Substring starting after the client_address and goes till the end of the string.
-        shell_command =  line[line.index(':', line.rindex(']'))+1, line.length].strip
+        options =  line[line.index(':', line.rindex(']'))+1, line.length].strip
+        options = options.split(':')
+        options = options.collect{|x| x.strip || x }
       else
         # Substring starting after the first ':' till the end of the string.
         client_list = line[line.index(':') + 1, line.length].strip
-        # If there is no shell commands, set to empty string.
-        shell_command = ''
+        # If there is no options, set to empty string.
+        options = ''
       end
     else
       x = line.split(':')
       daemon_list = x[0].strip
       client_list = x[1].strip
-      # Determine if there contains any shell commands in the line
+      # Determine if there contains any options in the line
       if line.index(':', line.index(':')+1) != nil
-        shell_command = line[line.index(':', line.index(':')+1)+1, line.length].strip
-      else
-        # If there is no shell commands, set to empty string.
-        shell_command = ''
+        options = line[line.index(':', line.index(':')+1)+1, line.length].strip
+        options = options.split(':')
+        options = options.collect{|x| x.strip || x }
+        # If there is no options, set to empty string.
+        options = ''
       end
     end
     {
       'daemon_list' => daemon_list,
       'client_list' => client_list,
-      'shell_command' => shell_command,
+      'options' => options,
     }
   end
 
@@ -124,19 +127,16 @@ end
 # Unit Testing examples
 #
 # describe etc_hosts_allow().where { daemon_list == 'ALL' } do
-#   its('daemon_list') { should eq ['ALL'] }
 #   its('client_list') { should eq ['127.0.0.1 [::1]'] }
-#   its('shell_command') { should eq [''] }
+#   its('options') { should eq [''] }
 # end
 #
 # describe etc_hosts_allow().where { daemon_list == 'sshd' } do
-#   its('daemon_list') { should eq ['sshd'] }
 #   its('client_list') { should eq ['ALL'] }
-#   its('shell_command') { should eq [''] }
+#   its('options') { should eq [''] }
 # end
 #
 # describe etc_hosts_allow().where { daemon_list == 'LOCAL' } do
-#   its('daemon_list') { should eq ['LOCAL'] }
 #   its('client_list') { should eq ['[fe80::]/10'] }
-#   its('shell_command') { should eq ['deny'] }
+#   its('options') { should eq ['deny'] }
 # end
