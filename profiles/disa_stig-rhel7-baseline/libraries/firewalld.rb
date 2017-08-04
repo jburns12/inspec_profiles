@@ -102,9 +102,6 @@ class FirewallD < Inspec::resource(1)
   def firewalld_command(command)
     result = ''
     result = inspec.command(command)
-    if result.stderr != ''
-      return "Error on command #{command}: #{result.stderr}"
-    end
     result.stdout
   end
 

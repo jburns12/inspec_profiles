@@ -20,6 +20,68 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
+# These attributes must be updated to reflect expectations of particular system
+FIREWALLD_SERVICES_ALLOW = attribute(
+  'firewalld_services_allow',
+  default: [
+    'dhcpv6-client',
+    'ssh'
+  ],
+  description: "Services that firewalld should be configured to allow."
+)
+
+FIREWALLD_SERVICES_DENY = attribute(
+  'firewalld_services_deny',
+  default: [
+    'ftp',
+    'telnet'
+  ],
+  description: "Services that firewalld should be configured to deny."
+)
+
+FIREWALLD_HOSTS_ALLOW = attribute(
+  'firewalld_hosts_allow',
+  default: [
+    'rule family="ipv4" source address="92.188.21.1/24" accept',
+    'rule family="ipv4" source address="211.17.142.46/32" accept'
+  ],
+  description: "Hosts that firewalld should be configured to allow."
+)
+
+FIREWALLD_HOSTS_DENY = attribute(
+  'firewalld_hosts_deny',
+  default: [],
+  description: "Hosts that firewalld should be configured to deny."
+)
+
+FIREWALLD_PORTS_ALLOW = attribute(
+  'firewalld_ports_allow',
+  default: [],
+  description: "Ports that firewalld should be configured to allow."
+)
+
+FIREWALLD_PORTS_DENY = attribute(
+  'firewalld_ports_deny',
+  default: [],
+  description: "Ports that firewalld should be configured to deny."
+)
+
+TCPWRAPPERS_ALLOW = attribute(
+  'tcpwrappers_allow',
+  default: [
+    ['sshd', 'ALL', 'allow']
+  ],
+  description: "Allow rules from etc/hosts.allow in form [daemon, client_list, options]."
+)
+
+TCPWRAPPERS_DENY = attribute(
+  'tcpwrappers_deny',
+  default: [
+    ['vsftpd', 'ALL', nil]
+  ],
+  description: "Allow rules from etc/hosts.allow in form [daemon, client_list, options]."
+)
+
 control "V-72315" do
   title "The system access control program must be configured to grant or deny
 system access to specific hosts and services."
@@ -64,8 +126,8 @@ public (default, active)
   forward-ports:
   icmp-blocks:
   rich rules:
- rule family=\"ipv4\" source address=\"92.188.21.1/24\" accept
- rule family=\"ipv4\" source address=\"211.17.142.46/32\" accept
+  rule family=\"ipv4\" source address=\"92.188.21.1/24\" accept
+  rule family=\"ipv4\" source address=\"211.17.142.46/32\" accept
 
 If \"firewalld\" is not active, determine whether \"tcpwrappers\" is being used by
 checking whether the \"hosts.allow\" and \"hosts.deny\" files are empty with the
@@ -91,9 +153,70 @@ rules for allowing specific services and hosts.
 If \"tcpwrappers\" is installed, configure the \"/etc/hosts.allow\" and
 \"/etc/hosts.deny\" to allow or deny access to specific hosts."
 
-  # @todo - finish
-  describe command("firewall-cmd --get-default-zone") do
-    its('stdout') { should match /blah/ }
+  # @todo - take into considerations all possible options with firewalld/tcpwrappers
+  # Need to remove !
+  if service('firewalld').running? then
+    zone = command('firewall-cmd --get-default-zone').stdout.strip
+    FIREWALLD_SERVICES_ALLOW.each do |service|
+      describe firewalld().service_enabled_in_zone("#{zone}", service) do
+        it { should eq 'yes' }
+      end
+    end
+    FIREWALLD_SERVICES_DENY.each do |service|
+      describe firewalld().service_enabled_in_zone("#{zone}", service) do
+        it { should eq 'no' }
+      end
+    end
+    FIREWALLD_HOSTS_ALLOW.each do |rule|
+      describe firewalld().rule_enabled(rule) do
+        it { should eq 'yes' }
+      end
+    end
+    FIREWALLD_HOSTS_DENY.each do |rule|
+      describe firewalld().rule_enabled(rule) do
+        it { should eq 'no' }
+      end
+    end
+    FIREWALLD_PORTS_ALLOW.each do |port|
+      describe firewalld().port_enabled_in_zone("#{zone}", port) do
+        it { should eq 'yes' }
+      end
+    end
+    FIREWALLD_PORTS_DENY.each do |port|
+      describe firewalld().port_enabled_in_zone("#{zone}", port) do
+        it { should eq 'no' }
+      end
+    end
+
+  else
+    describe package('tcp_wrappers') do
+      it { should be_installed }
+    end
+    TCPWRAPPERS_ALLOW.each do |rule|
+      if rule[2] then
+        describe etc_hosts_allow().where { daemon_list == rule[0] } do
+          its('client_list') { should cmp [rule[1]] }
+          its('options') { should cmp [rule[2]] }
+        end
+      else
+        describe etc_hosts_allow().where { daemon_list == rule[0] } do
+          its('client_list') { should cmp [rule[1]] }
+          its('options') { should cmp [] }
+        end
+      end
+    end
+    TCPWRAPPERS_DENY.each do |rule|
+      if rule[2] then
+        describe etc_hosts_deny().where { daemon_list == rule[0] } do
+          its('client_list') { should cmp [rule[1]] }
+          its('options') { should cmp [rule[2]] }
+        end
+      else
+        describe etc_hosts_deny().where { daemon_list == rule[0] } do
+          its('client_list') { should cmp [rule[1]] }
+          its('options') { should cmp [] }
+        end
+      end
+    end
   end
-  only_if { service('firewalld').running? }
 end
