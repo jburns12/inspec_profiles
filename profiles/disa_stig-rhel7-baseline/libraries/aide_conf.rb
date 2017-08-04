@@ -8,7 +8,12 @@ class AideConf < Inspec::resource(1)
   example "
   describe aide_conf().where { selection_line == '/bin' } do
     its('rules.flatten') { should include 'r' }
-  end"
+  end
+
+  describe aide_conf().all_have_rule('sha512') do
+    it { should eq true }
+  end
+  "
 
   attr_reader :params
 
@@ -20,6 +25,19 @@ class AideConf < Inspec::resource(1)
     @rules = nil
     read_content
     return skip_resource 'The aide_conf resource is not supported on your OS' if inspec.os.windows?
+  end
+
+  def all_have_rule(rule)
+    in_all_lines = true
+    all_lines = parse_conf(@content)
+    all_lines.each do |line|
+      if line['selection_line'] != nil then
+        if !line['rules'].include? "#{rule}" then
+          in_all_lines = false
+        end
+      end
+    end
+    in_all_lines
   end
 
   def params
@@ -58,15 +76,31 @@ class AideConf < Inspec::resource(1)
   end
 
   def parse_line(line)
+    selection_line = nil
+    rule_list = nil
+    # Rules that represent multiple rules (R,L,>)
+    r_rules = ['p', 'i', 'l', 'n', 'u', 'g', 's', 'm', 'c', 'md5']
+    l_rules = ['p', 'i', 'l', 'n', 'u', 'g']
+    grow_log_rules = ['p', 'l', 'u', 'g', 'i', 'n', 'S']
     # Case when line is a rule line
-    if line.include? "=" then
-      selection_line = nil
-      rule_list = nil
+    if line.include? " = " then
       line.gsub!(/\s+/, "")
       rule_line_arr = line.split("=")
       rules_list = rule_line_arr.last.split("+")
       rule_name = rule_line_arr.first
-      @rules["#{rule_name}"] = rules_list
+      rules_list.each_index do |i|
+        # Cases where rule respresents one or more other rules
+        if @rules.key?("#{rules_list[i]}") then
+          rules_list[i] = @rules["#{rules_list[i]}"]
+        elsif rules_list[i] == 'R' then
+          rules_list[i] = r_rules
+        elsif rules_list[i] == 'L' then
+          rules_list[i] = l_rules
+        elsif rules_list[i] == '>' then
+          rules_list[i] = grow_log_rules
+        end
+      end
+      @rules["#{rule_name}"] = rules_list.flatten
     end
 
     # Case when line is a selection line
@@ -76,8 +110,15 @@ class AideConf < Inspec::resource(1)
       rule_list = selec_line_arr.last.split("+")
       rule_list.each_index do |i|
         hash_list = @rules["#{rule_list[i]}"]
+        # Cases where rule respresents one or more other rules
         if hash_list != nil then
           rule_list[i] = hash_list
+        elsif rule_list[i] == 'R' then
+          rule_list[i] = r_rules
+        elsif rule_list[i] == 'L' then
+          rule_list[i] = l_rules
+        elsif rule_list[i] == '>' then
+          rule_list[i] = grow_log_rules
         end
       end
       rule_list.flatten!

@@ -154,7 +154,6 @@ If \"tcpwrappers\" is installed, configure the \"/etc/hosts.allow\" and
 \"/etc/hosts.deny\" to allow or deny access to specific hosts."
 
   # @todo - take into considerations all possible options with firewalld/tcpwrappers
-  # Need to remove !
   if service('firewalld').running? then
     zone = command('firewall-cmd --get-default-zone').stdout.strip
     FIREWALLD_SERVICES_ALLOW.each do |service|

@@ -71,11 +71,13 @@ approved cryptographic hashes for validating file contents and directories, this
 a finding."
   tag "fix": "Migrate the system audit data path onto a separate file system."
 
-  aide_conf = command('find / -name aide.conf').stdout.split('\n')
+  # In case aide.conf is in another directory other than /etc
+  aide_conf_file = command('find / -name aide.conf').stdout.split("\n").first
+
   describe package("aide") do
     it { should be_installed }
   end
-  describe.one do
-
+  describe aide_conf("#{aide_conf_file}").all_have_rule('sha512') do
+    it { should eq true }
   end
 end
