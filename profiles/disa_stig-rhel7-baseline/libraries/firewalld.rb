@@ -32,7 +32,7 @@ class FirewallD < Inspec::resource(1)
       it { should eq true }
     end"
 
-  def initialize()
+  def initialize
     return skip_resource 'The `etc_hosts_deny` resource is not supported on your OS.' unless inspec.os.linux?
   end
 
