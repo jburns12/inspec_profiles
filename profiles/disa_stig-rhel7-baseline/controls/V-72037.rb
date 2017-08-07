@@ -58,10 +58,15 @@ with the following command:
 # chmod 0755  <file>"
 
   # Assumption - users' home directories created in "home"
-  ww_files = command('find / -perm -002 -type f -exec ls {} \;').stdout.split("\n")
-  ww_files.each do |ww_file|
-    describe command("grep #{ww_file} /home/*/.*") do
-      its('stdout.strip') { should match /^$/ }
+  dotfiles = command('find /home -xdev -maxdepth 2 -name ".*" -type f').stdout.lines
+  ww_files = command('find / -perm -002 -type f -exec ls {} \;').stdout.lines
+
+  # check each dotfile for existance of each world-writeable file
+  dotfiles.each do |dotfile|
+    describe file(dotfile.strip) do
+      ww_files.each do |ww_file|
+        its('content') { should_not include ww_file.strip }
+      end
     end
   end
 end
