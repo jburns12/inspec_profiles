@@ -6,11 +6,11 @@ class AideConf < Inspec::resource(1)
   desc 'Use the aide_conf InSpec audit resource to test the rules established for
     the file integrity tool AIDE. Controlled by the aide.conf file.'
   example "
-  describe aide_conf().where { selection_line == '/bin' } do
+  describe aide_conf.where { selection_line == '/bin' } do
     its('rules.flatten') { should include 'r' }
   end
 
-  describe aide_conf().all_have_rule('sha512') do
+  describe aide_conf.all_have_rule('sha512') do
     it { should eq true }
   end
   "
@@ -24,10 +24,13 @@ class AideConf < Inspec::resource(1)
     @content = nil
     @rules = nil
     read_content
-    return skip_resource 'The aide_conf resource is not supported on your OS' if inspec.os.windows?
   end
 
   def all_have_rule(rule)
+    # Case when file didn't exist or perms didn't allow an open
+    if @content.instance_of?(String)
+      return false
+    end
     in_all_lines = true
     all_lines = parse_conf(@content)
     all_lines.each do |line|
@@ -38,10 +41,6 @@ class AideConf < Inspec::resource(1)
       end
     end
     in_all_lines
-  end
-
-  def params
-    @params = parse_conf(@content)
   end
 
   filter = FilterTable.create
@@ -65,8 +64,13 @@ class AideConf < Inspec::resource(1)
 
   def read_content
     @content = ''
-    @content = filter_comments(read_file(@conf_path))
     @rules = {}
+    @content = read_file(@conf_path)
+    if @content.instance_of?(String)
+      return @content
+    end
+    @content = filter_comments(@content)
+    @params = parse_conf(@content)
   end
 
   def parse_conf(content)
@@ -82,6 +86,7 @@ class AideConf < Inspec::resource(1)
     r_rules = ['p', 'i', 'l', 'n', 'u', 'g', 's', 'm', 'c', 'md5']
     l_rules = ['p', 'i', 'l', 'n', 'u', 'g']
     grow_log_rules = ['p', 'l', 'u', 'g', 'i', 'n', 'S']
+
     # Case when line is a rule line
     if line.include? " = " then
       line.gsub!(/\s+/, "")
@@ -90,13 +95,15 @@ class AideConf < Inspec::resource(1)
       rule_name = rule_line_arr.first
       rules_list.each_index do |i|
         # Cases where rule respresents one or more other rules
-        if @rules.key?("#{rules_list[i]}") then
+        if @rules.key?("#{rules_list[i]}")
           rules_list[i] = @rules["#{rules_list[i]}"]
-        elsif rules_list[i] == 'R' then
+        end
+        case rules_list[i]
+        when "R"
           rules_list[i] = r_rules
-        elsif rules_list[i] == 'L' then
+        when "L"
           rules_list[i] = l_rules
-        elsif rules_list[i] == '>' then
+        when ">"
           rules_list[i] = grow_log_rules
         end
       end
@@ -104,20 +111,22 @@ class AideConf < Inspec::resource(1)
     end
 
     # Case when line is a selection line
-    if line.start_with?('/') then
+    if line.start_with?('/')
       selec_line_arr = line.split(" ")
       selection_line = selec_line_arr.first
       rule_list = selec_line_arr.last.split("+")
       rule_list.each_index do |i|
         hash_list = @rules["#{rule_list[i]}"]
         # Cases where rule respresents one or more other rules
-        if hash_list != nil then
+        if hash_list != nil
           rule_list[i] = hash_list
-        elsif rule_list[i] == 'R' then
+        end
+        case rule_list[i]
+        when "R"
           rule_list[i] = r_rules
-        elsif rule_list[i] == 'L' then
+        when "L"
           rule_list[i] = l_rules
-        elsif rule_list[i] == '>' then
+        when ">"
           rule_list[i] = grow_log_rules
         end
       end
@@ -132,13 +141,14 @@ class AideConf < Inspec::resource(1)
   def read_file(conf_path = @conf_path)
     file = inspec.file(conf_path)
     if !file.file?
-      return skip_resource "Can't find file. If this is the correct path,
-        access control is turned off.\"#{@conf_path}\""
+      return skip_resource "Can't find file \"#{@conf_path}\""
     end
     raw_conf = file.content
+    if raw_conf == nil
+      return skip_resource "File can't be opened or is empty \"#{@conf_path}\""
+    end
     if raw_conf.empty? && !file.empty?
-      return skip_resource("File is empty. If this is the correct file,
-        access control is turned off. Path:\"#{@conf_path}\"")
+      return skip_resource "Can't read file \"#{@conf_path}\""
     end
 
     # If there is a file and it contains content, continue
