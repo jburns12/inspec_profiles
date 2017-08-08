@@ -57,11 +57,14 @@ Note: The example will be for the user \"smithj\".
 # chmod 0750 /home/smithj"
 
   # Assumption - users' home directories created in "home"
-  # @todo - allow for perms less privileged than 750
+  # Allows for mode 750 or less permissive
   home_dirs = command('ls -d /home/*').stdout.split("\n")
   home_dirs.each do |home|
     describe file(home) do
-      its('mode') { should cmp "750" }
+      it { should_not be_writable.by('group')}
+      it { should_not be_executable.by('others') }
+      it { should_not be_writable.by('others') }
+      it { should_not be_readable.by('others') }
     end
   end
 end

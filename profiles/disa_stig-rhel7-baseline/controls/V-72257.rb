@@ -53,11 +53,16 @@ If any file has a mode more permissive than \"0600\", this is a finding."
 
 # chmod 0600 /etc/ssh/ssh_host*key"
 
-  # @todo - needs testing
   all_keys = Dir["/etc/ssh/*key"]
   all_keys.each do |key|
     describe file("/etc/ssh/#{key}") do
-      its('mode') { should cmp '0600' }
+      it { should_not be_executable.by('user') }
+      it { should_not be_readable.by('group') }
+      it { should_not be_writable.by('group') }
+      it { should_not be_executable.by('group') }
+      it { should_not be_readable.by('others') }
+      it { should_not be_writable.by('others') }
+      it { should_not be_executable.by('others') }
     end
   end
 end
