@@ -1,4 +1,4 @@
-# encoding: utf-8 
+# encoding: utf-8
 #
 =begin
 -----------------
@@ -19,6 +19,23 @@ Source: STIG.DOD.MIL
 uri: http://iase.disa.mil
 -----------------
 =end
+
+# Will need to be changed to reflect list of authorized system accounts
+ADMIN_LOGINS = attribute(
+  'admin_logins',
+  default: [
+    'root'
+  ],
+  description: "System accounts that support approved system activities."
+)
+
+NON_ADMIN_LOGINS = attribute(
+  'non_admin_logins',
+  default: [
+    '__default__'
+  ],
+  description: "System accounts that support approved system activities."
+)
 
 control "V-71971" do
   title "The operating system must prevent non-privileged users from executing
@@ -96,4 +113,26 @@ Use the following command to map a new user to the \"user_u\" role:
 Use the following command to map an existing user to the \"user_u\" role:
 
 # semanage login -m -s user_u <username>"
+
+  # @todo - needs testing
+  semanage_results = command("semanage login -l").stdout.split("\n")
+  semanage_results.shift
+
+  semanage_results.each do |result|
+    result = result.gsub(/\s_/m, ' ').strip.split(" ")
+    if ADMIN_LOGINS.include? "#{result[0]}"
+      describe.one do
+        describe command("semanage login -l | grep #{result[1]}") do
+          its('stdout') { should match /sysadm_u/ }
+        end
+        describe command("semanage login -l | grep #{result[1]}") do
+          its('stdout') { should match /staff_u/ }
+        end
+      end
+    elsif NON_ADMIN_LOGINS.include? "#{result[0]}"
+      describe command("semanage login -l | grep #{result[1]}") do
+        its('stdout') { should match /user_u/ }
+      end
+    end
+  end
 end
