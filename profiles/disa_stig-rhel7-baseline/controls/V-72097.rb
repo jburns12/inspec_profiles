@@ -20,16 +20,15 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-CHOWN_AUDIT_LINE_32 = attribute(
-  'chown_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S chown .*-F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit the chown command on a 32-bit architecture."
-)
-
-CHOWN_AUDIT_LINE_64 = attribute(
-  'chown_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S chown .*-F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit the chown command on a 64-bit architecture."
+CHOWN_AUDIT_FIELDS = attribute(
+  'chown_audit_fields',
+  default: [
+    {"arch" => ['arch=b32', 'arch=b64'],
+    "auid_pos" => 'auid>=1000',
+    "auid_neg" => ['auid!=-1', 'auid!=4294967295'],
+    "key" => 'key=perm_mod'},
+    ['arch=b32', 'arch=b64', 'auid>=1000', 'auid!=-1', 'auid!=4294967295', 'key=perm_mod']],
+  description: "The fields that you use to audit the chown command."
 )
 
 control "V-72097" do
@@ -81,12 +80,40 @@ If the command does not return any output, this is a finding."
 
 The audit daemon must be restarted for the changes to take effect."
 
+  sys_call = "chown"
+
+  # Check action and filter
+  describe auditd_rules.syscall("#{sys_call}").action do
+    it { should eq(["always"]) }
+  end
+  describe auditd_rules.syscall("#{sys_call}").action('always').list do
+    it { should eq(["exit"]) }
+  end
+
+  # Check permission fields
   describe.one do
-    describe auditd_rules do
-      its('lines') { should match %r{#{CHOWN_AUDIT_LINE_32}} }
+    CHOWN_AUDIT_FIELDS.first['arch'].each do |arch|
+      describe auditd_rules.syscall("#{sys_call}").fields.flatten do
+        it { should include arch }
+      end
     end
-    describe auditd_rules do
-      its('lines') { should match %r{#{CHOWN_AUDIT_LINE_64}} }
+  end
+  describe auditd_rules.syscall("#{sys_call}").fields.flatten do
+    it { should include CHOWN_AUDIT_FIELDS.first['auid_pos'] }
+  end
+  describe.one do
+    CHOWN_AUDIT_FIELDS[0]['auid_neg'].each do |auid_neg|
+      describe auditd_rules.syscall("#{sys_call}").fields.flatten do
+        it { should include auid_neg }
+      end
     end
+  end
+  describe auditd_rules.syscall("#{sys_call}").fields.flatten do
+    it { should include CHOWN_AUDIT_FIELDS.first['key'] }
+  end
+
+  # Ensure all rule values are those that are expected
+  describe auditd_rules.syscall("#{sys_call}").fields.flatten do
+    it { should be_in CHOWN_AUDIT_FIELDS.last }
   end
 end

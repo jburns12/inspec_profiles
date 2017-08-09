@@ -119,7 +119,6 @@ Use the following command to map an existing user to the \"user_u\" role:
     it { should be_installed }
   end
 
-  # @todo - needs testing
   semanage_results = command("semanage login -l").stdout.split("\n")
   semanage_results.shift
 
