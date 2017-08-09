@@ -107,17 +107,17 @@ with the PPSM CLSA for the site or program and the PPSM CAL."
   if service('firewalld').running? then
     zone = command('firewall-cmd --get-default-zone').stdout.strip
     FIREWALLD_SERVICES_DENY.each do |service|
-      describe firewalld().service_enabled_in_zone("#{zone}", service) do
+      describe firewalld().service_enabled_in_zone?("#{zone}", service) do
         it { should eq 'no' }
       end
     end
     FIREWALLD_HOSTS_DENY.each do |rule|
-      describe firewalld().rule_enabled(rule) do
+      describe firewalld().rule_enabled?(rule) do
         it { should eq 'no' }
       end
     end
     FIREWALLD_PORTS_DENY.each do |port|
-      describe firewalld().port_enabled_in_zone("#{zone}", port) do
+      describe firewalld().port_enabled_in_zone?("#{zone}", port) do
         it { should eq 'no' }
       end
     end
