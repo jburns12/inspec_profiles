@@ -24,7 +24,7 @@ uri: http://iase.disa.mil
 ADMIN_LOGINS = attribute(
   'admin_logins',
   default: [
-    'root'
+    'system_u'
   ],
   description: "System accounts that support approved system activities."
 )
@@ -114,6 +114,11 @@ Use the following command to map an existing user to the \"user_u\" role:
 
 # semanage login -m -s user_u <username>"
 
+  # Make sure semanage is installed
+  describe package("policycoreutils-python") do
+    it { should be_installed }
+  end
+
   # @todo - needs testing
   semanage_results = command("semanage login -l").stdout.split("\n")
   semanage_results.shift
@@ -132,6 +137,11 @@ Use the following command to map an existing user to the \"user_u\" role:
     elsif NON_ADMIN_LOGINS.include? "#{result[0]}"
       describe command("semanage login -l | grep #{result[1]}") do
         its('stdout') { should match /user_u/ }
+      end
+    # Case when account isn't documented
+    else
+      describe command("semanage login -l | grep #{result[1]}") do
+        its('stdout') { should match /^$/ }
       end
     end
   end
