@@ -6,6 +6,10 @@ class AideConf < Inspec::resource(1)
   desc 'Use the aide_conf InSpec audit resource to test the rules established for
     the file integrity tool AIDE. Controlled by the aide.conf file.'
   example "
+  describe aide_conf do
+    its('selection_lines') { should include '/sbin' }
+  end
+
   describe aide_conf.where { selection_line == '/bin' } do
     its('rules.flatten') { should include 'r' }
   end
@@ -75,9 +79,14 @@ class AideConf < Inspec::resource(1)
   end
 
   def parse_conf(content)
-    content.map do |line|
-      parse_line(line)
-    end.compact
+    params = []
+    content.each do |line|
+      param = parse_line(line)
+      if !param['selection_line'].nil?
+        params.push(param)
+      end
+    end
+    params
   end
 
   def parse_line(line)
@@ -108,9 +117,16 @@ class AideConf < Inspec::resource(1)
     @rules["#{rule_name}"] = rules_list.flatten
   end
 
+  def normalize_dir(dir)
+    if dir.end_with? '/'
+      dir.chop!
+    end
+  end
+
   def parse_selection_line(line)
     selec_line_arr = line.split(" ")
     selection_line = selec_line_arr.first
+    normalize_dir(selection_line)
     rule_list = selec_line_arr.last.split("+")
     rule_list.each_index do |i|
       hash_list = @rules["#{rule_list[i]}"]
