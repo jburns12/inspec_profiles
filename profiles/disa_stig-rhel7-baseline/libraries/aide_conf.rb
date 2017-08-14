@@ -24,6 +24,8 @@ require 'utils/filter'
 
     attr_reader :params
 
+    include CommentParser
+
     def initialize(aide_conf_path = nil)
       return skip_resource 'The `aide_conf` resource is not supported on your OS.' unless inspec.os.linux?
       @conf_path = aide_conf_path || '/etc/aide.conf'
@@ -73,8 +75,8 @@ require 'utils/filter'
     def filter_comments(data)
       content = []
       data.each do |line|
-        line.chomp!
-        content << line unless line.match(/^\s*#/) || line.empty?
+        content_line, = parse_comment_line(line, comment_char: '#', standalone_comments: false)
+        content.push(content_line)
       end
       content
     end
