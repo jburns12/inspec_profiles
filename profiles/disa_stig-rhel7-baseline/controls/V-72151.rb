@@ -20,10 +20,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-UNIX_CHKPWD_AUDIT_LINE = attribute(
-  'unix_chkpwd_audit_line',
-  default: '^-a always,exit -F path=/sbin/unix_chkpwd -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit unix_chkpwd command"
+UNIX_CHKPWD_AUDIT_FIELDS = attribute(
+  'unix_chkpwd_file_audit_fields',
+  default: ['path=/sbin/unix_chkpwd', 'perm=x', 'auid>=1000', 'auid!=-1'],
+  description: "The fields that you use to audit setsebool command using auditctl"
 )
 
 control "V-72151" do
@@ -72,7 +72,11 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{UNIX_CHKPWD_AUDIT_LINE}} }
+  path = '/sbin/unix_chkpwd'
+
+  describe auditd_rules2.file("#{path}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit'] }
+    its('fields_nokey.flatten') { should match_array UNIX_CHKPWD_AUDIT_FIELDS }
   end
 end

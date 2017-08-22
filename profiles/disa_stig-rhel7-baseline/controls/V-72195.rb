@@ -20,12 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-MODPROBE_AUDIT_LINE = attribute(
-  'modprobe_audit_line',
-  default: '^-w /sbin/modprobe -p x -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit modprobe command"
-)
-
 control "V-72195" do
   title "All uses of the modprobe command must be audited."
   desc  "
@@ -73,7 +67,9 @@ those that do not match the CPU architecture):
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{MODPROBE_AUDIT_LINE}} }
+  path = '/sbin/modprobe'
+
+  describe auditd_rules2.file("#{path}") do
+    its('permissions') { should include 'x' }
   end
 end

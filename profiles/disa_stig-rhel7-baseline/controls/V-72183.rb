@@ -20,10 +20,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-CRONTAB_AUDIT_LINE = attribute(
-  'crontab_audit_line',
-  default: '^-a always,exit -F path=/usr/bin/crontab -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit crontab command"
+CRONTAB_AUDIT_FIELDS = attribute(
+  'ptchown_audit_fields',
+  default: ['path=/usr/bin/crontab', 'perm=x', 'auid>=1000', 'auid!=-1'],
+  description: "The fields that you use to audit setsebool command using auditctl"
 )
 
 control "V-72183" do
@@ -73,7 +73,11 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{CRONTAB_AUDIT_LINE}} }
+  path = '/usr/bin/crontab'
+
+  describe auditd_rules2.file("#{path}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit'] }
+    its('fields_nokey.flatten') { should match_array CRONTAB_AUDIT_FIELDS }
   end
 end

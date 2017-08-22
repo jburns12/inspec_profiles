@@ -19,17 +19,11 @@ Source: STIG.DOD.MIL
 uri: http://iase.disa.mil
 -----------------
 =end
-
-CREAT_AUDIT_LINE_32 = attribute(
-  'creat_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S creat .*-F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit creat command on a 32-bit architecture"
-)
-
-CREAT_AUDIT_LINE_64 = attribute(
-  'creat_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S creat .*-F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit creat command on a 64-bit architecture"
+AUDIT_FIELDS_PERMS = attribute(
+  'audit_fields_perms',
+  default:
+    ['arch=b32', 'arch=b64', 'auid>=1000', 'auid!=-1', 'exit=-EPERM', 'exit=-EACCES'],
+  description: "The fields that you use to audit the chown command on a 32 bit arch using auditctl."
 )
 
 control "V-72123" do
@@ -88,12 +82,11 @@ auid!=4294967295 -k access
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe.one do
-    describe auditd_rules do
-      its('lines') { should match %r{#{CREAT_AUDIT_LINE_32}} }
-    end
-    describe auditd_rules do
-      its('lines') { should match %r{#{CREAT_AUDIT_LINE_64}} }
-    end
+  sys_call = "creat"
+
+  describe auditd_rules2.syscall("#{sys_call}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit']}
+    its('fields_nokey.flatten.uniq') { should match_array AUDIT_FIELDS_PERMS }
   end
 end

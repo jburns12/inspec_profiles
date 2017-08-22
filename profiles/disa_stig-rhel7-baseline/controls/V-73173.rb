@@ -69,8 +69,9 @@ Add or update the following file system rule in \"/etc/audit/rules.d/audit.rules
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{^-w\s/etc/opasswd\s-p\swa\s-k\sidentity$} }
+  path = '/etc/opasswd'
+
+  describe auditd_rules2.file("#{path}") do
+    its('permissions') { should include 'wa' }
   end
-  only_if { package('audit').installed? }
 end

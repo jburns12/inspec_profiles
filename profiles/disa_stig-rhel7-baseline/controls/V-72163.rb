@@ -20,18 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-SUDOERS_AUDIT_LINE = attribute(
-  'sudoers_audit_line',
-  default: '^-w /etc/sudoers -p wa -k \S+\n?$',
-  description: "The line that you use to audit sudoers command"
-)
-
-SUDOERS_D_AUDIT_LINE = attribute(
-  'sudoers_d_audit_line',
-  default: '^-w /etc/sudoers.d -p wa -k \S+\n?$',
-  description: "The line that you use to audit sudoers.d command"
-)
-
 control "V-72163" do
   title "All uses of the sudoers command must be audited."
   desc  "
@@ -86,10 +74,10 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{SUDOERS_AUDIT_LINE}} }
-  end
-  describe auditd_rules do
-    its('lines') { should match %r{#{SUDOERS_D_AUDIT_LINE}} }
+  sudo_path = '/etc/sudoers'
+  sudod_path = '/etc/sudoers.d'
+
+  describe auditd_rules2.file("#{sudo_path}") do
+    its('permissions') { should include 'wa' }
   end
 end

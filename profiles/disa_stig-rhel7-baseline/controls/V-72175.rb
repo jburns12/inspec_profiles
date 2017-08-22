@@ -20,10 +20,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-POSTDROP_AUDIT_LINE = attribute(
-  'postdrop_audit_line',
-  default: '^-a always,exit -F path=/usr/sbin/postdrop -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit postdrop command"
+POSTDROP_AUDIT_FIELDS = attribute(
+  'postdrop_audit_fields',
+  default: ['path=/usr/sbin/postdrop', 'perm=x', 'auid>=1000', 'auid!=-1'],
+  description: "The fields that you use to audit setsebool command using auditctl"
 )
 
 control "V-72175" do
@@ -70,7 +70,11 @@ auid!=4294967295 -k privileged-postfix
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{POSTDROP_AUDIT_LINE}} }
+  path = '/usr/sbin/postdrop'
+
+  describe auditd_rules2.file("#{path}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit'] }
+    its('fields_nokey.flatten') { should match_array POSTDROP_AUDIT_FIELDS }
   end
 end

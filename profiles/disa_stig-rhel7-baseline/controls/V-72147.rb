@@ -72,7 +72,9 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{LASTLOG_AUDIT_LINE}} }
+  path = '/var/log/lastlog'
+
+  describe auditd_rules2.file("#{path}") do
+    its('permissions') { should eq ['wa'] }
   end
 end

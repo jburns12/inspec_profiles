@@ -20,10 +20,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-SUDO_AUDIT_LINE = attribute(
-  'sudo_audit_line',
-  default: '^-a always,exit -F path=/usr/bin/sudo -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit sudo command"
+SUDO_AUDIT_FIELDS = attribute(
+  'sudo_audit_fields',
+  default: ['path=/usr/bin/sudo', 'perm=x', 'auid>=1000', 'auid!=-1'],
+  description: "The fields that you use to audit setsebool command using auditctl"
 )
 
 control "V-72161" do
@@ -75,7 +75,11 @@ privileged-priv_change
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{SUDO_AUDIT_LINE}} }
+  path = '/usr/bin/sudo'
+
+  describe auditd_rules2.file("#{path}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit'] }
+    its('fields_nokey.flatten') { should match_array SUDO_AUDIT_FIELDS }
   end
 end

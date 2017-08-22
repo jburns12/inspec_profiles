@@ -20,10 +20,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-PAM_TIMESTAMP_CHECK_AUDIT_LINE = attribute(
-  'pam_timestamp_check_audit_line',
-  default: '^-a always,exit -F path=/sbin/pam_timestamp_check -F perm=x -F auid>=1000 -F auid!=4294967295  -k \S+\n?$',
-  description: "The line that you use to audit pam_timestamp_check command"
+PAM_TS_AUDIT_FIELDS = attribute(
+  'pam_ts_audit_fields',
+  default: ['path=/sbin/pam_timestamp_check', 'perm=x', 'auid>=1000', 'auid!=-1'],
+  description: "The fields that you use to audit setsebool command using auditctl"
 )
 
 control "V-72185" do
@@ -61,7 +61,11 @@ auid!=4294967295 -k privileged-pam
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{PAM_TIMESTAMP_CHECK_AUDIT_LINE}} }
+  path = '/sbin/pam_timestamp_check'
+
+  describe auditd_rules2.file("#{path}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit'] }
+    its('fields_nokey.flatten') { should match_array PAM_TS_AUDIT_FIELDS }
   end
 end

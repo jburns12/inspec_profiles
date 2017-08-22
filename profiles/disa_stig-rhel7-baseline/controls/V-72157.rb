@@ -20,10 +20,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-USERHELPER_AUDIT_LINE = attribute(
-  'userhelper_audit_line',
-  default: '^-a always,exit -F path=/usr/sbin/userhelper -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit userhelper command"
+USERHELPER_AUDIT_FIELDS = attribute(
+  'chage_file_audit_fields',
+  default: ['path=/usr/sbin/userhelper', 'perm=x', 'auid>=1000', 'auid!=-1'],
+  description: "The fields that you use to audit setsebool command using auditctl"
 )
 
 control "V-72157" do
@@ -72,7 +72,11 @@ auid!=4294967295 -k privileged-passwd
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{USERHELPER_AUDIT_LINE}} }
+  path = '/usr/sbin/userhelper'
+
+  describe auditd_rules2.file("#{path}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit'] }
+    its('fields_nokey.flatten') { should match_array USERHELPER_AUDIT_FIELDS }
   end
 end

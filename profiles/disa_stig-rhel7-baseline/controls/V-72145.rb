@@ -20,12 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-FAILLOCK_AUDIT_LINE = attribute(
-  'faillock_audit_line',
-  default: '^-w /var/run/faillock -p wa -k \S+\n?$',
-  description: "The line that you use to verify the generation of audit records for unsuccesful account access events"
-)
-
 control "V-72145" do
   title "The operating system must generate audit records for all unsuccessful
 account access events."
@@ -72,7 +66,9 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{FAILLOCK_AUDIT_LINE}} }
+  path = '/var/run/faillock'
+
+  describe auditd_rules2.file("#{path}") do
+    its('permissions') { should eq ['wa'] }
   end
 end

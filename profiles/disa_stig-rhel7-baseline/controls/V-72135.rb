@@ -20,10 +20,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-SEMANAGE_AUDIT_LINE = attribute(
-  'semanage_audit_line',
-  default: '^-a always,exit -F path=/usr/sbin/semanage -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit semanage command"
+SEMANAGE_AUDIT_FIELDS = attribute(
+  'semanage_file_audit_fields',
+  default: ['path=/usr/sbin/semanage', 'perm=x', 'auid>=1000', 'auid!=-1'],
+  description: "The fields that you use to audit setsebool command using auditctl"
 )
 
 control "V-72135" do
@@ -70,7 +70,11 @@ auid!=4294967295 -k privileged-priv_change
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{SEMANAGE_AUDIT_LINE}} }
+  path = '/usr/sbin/semanage'
+
+  describe auditd_rules2.file("#{path}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit'] }
+    its('fields_nokey.flatten') { should match_array SEMANAGE_AUDIT_FIELDS }
   end
 end

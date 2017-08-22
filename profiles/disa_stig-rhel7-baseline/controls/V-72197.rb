@@ -20,15 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-ETC_PASSWD_AUDIT_LINES = attribute(
-  'etc_passwd_audit_line',
-  default: [
-    '^-w /etc/passwd -p wa -k \S+\n?$',
-    '^-w /etc/passwd -p wa -k \S+\n?$'
-  ],
-  description: "The line that you use to verify generation of audit records for events affecting /etc/passwd"
-)
-
 control "V-72197" do
   title "The operating system must generate audit records for all account creations,
 modifications, disabling, and termination events that affect /etc/passwd."
@@ -80,12 +71,9 @@ Add or update the following rule \"/etc/audit/rules.d/audit.rules\":
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe.one do
-    describe auditd_rules do
-      its('lines') { should match %r{#{ETC_PASSWD_AUDIT_LINES[0]}} }
-    end
-    describe auditd_rules do
-      its('lines') { should match %r{#{ETC_PASSWD_AUDIT_LINES[1]}} }
-    end
+  path = '/etc/passwd'
+
+  describe auditd_rules2.file("#{path}") do
+    its('permissions') { should include 'wa' }
   end
 end
