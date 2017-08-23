@@ -49,7 +49,7 @@ system with the \"chgrp\" command:
 
 # chgrp <group> <file>"
 
-  describe command('find / -nogroup') do
+  describe command('find / -xdev -fstype xfs -nogroup') do
     its('stdout.strip') { should match /^$/ }
   end
 end

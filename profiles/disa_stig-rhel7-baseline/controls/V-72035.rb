@@ -63,7 +63,7 @@ systems that contain user home directories for interactive users."
   # Assumption - users' home directories created in "home"
   home_dirs = command('ls -d /home/*').stdout.split("\n")
   home_dirs.each do |home|
-    grep_results = command("grep -i path #{home}/.*").stdout.split("\n")
+    grep_results = command("grep -i path --exclude=\".bash_history\" #{home}/.*").stdout.split("\n")
     grep_results.each do |result|
       result.slice! "PATH="
       # Case when last value in exec search path is :

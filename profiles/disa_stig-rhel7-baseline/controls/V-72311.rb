@@ -54,7 +54,9 @@ setting.
 Ensure the \"sec\" option is defined as \"krb5:krb5i:krb5p\"."
 
   # @todo - fstab resource
-  describe command("awk '((($3 == \"nfs\") || ($3 == \"nfs4\")) && ($4 !~ \"sec=krb5:krb5i:krb5p\")) {print}' /etc/fstab") do
-    its('stdout.strip') { should match /^$/ }
+  nfs_systems = etc_fstab.nfs_file_systems
+  nfs_systems.each do |file_system|
+    describe file_system do
+      its ( 'mount_options' ) { should include '\'sec=krb5:krb5i:krb5p\'' }
+    end
   end
-end

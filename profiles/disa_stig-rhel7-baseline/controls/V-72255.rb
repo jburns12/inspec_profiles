@@ -55,14 +55,10 @@ following command:
 
 # chmod 0644 /etc/ssh/*.key.pub"
 
-  pub_keys = Dir["/**/*.pub"]
-  pub_keys.each do |key|
-    describe file("#{key}") do
-      it { should_not be_executable.by('user') }
-      it { should_not be_writable.by('group') }
-      it { should_not be_executable.by('group') }
-      it { should_not be_writable.by('others') }
-      it { should_not be_executable.by('others') }
+  pub_files = command("find /etc/ssh -xdev -name '*.pub'").stdout.split("\n")
+  pub_files.each do |pubfile|
+    describe file(pubfile) do
+      its ('mode') {should cmp <= '0644'}
     end
   end
 end

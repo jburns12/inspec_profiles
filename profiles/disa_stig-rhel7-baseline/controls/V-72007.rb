@@ -48,7 +48,7 @@ the system with the \"chown\" command:
 
 # chown <user> <file>"
 
-  describe command('find / -nouser') do
+  describe command('find / -xdev -fstype xfs -nouser') do
     its('stdout.strip') { should match /^$/ }
   end
 end
