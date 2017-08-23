@@ -20,12 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-TALLYLOG_AUDIT_LINE = attribute(
-  'tallylog_audit_line',
-  default: '^-w /var/log/tallylog -p wa -k \S+\n?$',
-  description: "The line that you use to verify generation of audit records for all account access count events"
-)
-
 control "V-72143" do
   title "The operating system must generate audit records for all
 successful/unsuccessful account access count events."
@@ -72,7 +66,9 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{TALLYLOG_AUDIT_LINE}} }
+  path = '/var/log/tallylog'
+
+  describe auditd_rules2.file("#{path}") do
+    its('permissions') { should eq ['wa'] }
   end
 end

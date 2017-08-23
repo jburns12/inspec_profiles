@@ -20,10 +20,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-NEWGRP_AUDIT_LINE = attribute(
-  'newgrp_audit_line',
-  default: '^-a always,exit -F path=/usr/bin/newgrp -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit newgrp command"
+NEWGRP_AUDIT_FIELDS = attribute(
+  'sudo_audit_fields',
+  default: ['path=/usr/bin/newgrp', 'perm=x', 'auid>=1000', 'auid!=-1'],
+  description: "The fields that you use to audit setsebool command using auditctl"
 )
 
 control "V-72165" do
@@ -75,7 +75,11 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{NEWGRP_AUDIT_LINE}} }
+  path = '/usr/bin/newgrp'
+
+  describe auditd_rules2.file("#{path}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit'] }
+    its('fields_nokey.flatten') { should match_array NEWGRP_AUDIT_FIELDS }
   end
 end

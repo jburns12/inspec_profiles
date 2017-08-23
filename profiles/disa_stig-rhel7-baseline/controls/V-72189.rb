@@ -20,18 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-DELETE_MODULE_AUDIT_LINE_32 = attribute(
-  'delete_module_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S delete_module .*-k \S+\n?$',
-  description: "The line that you use to audit the delete_module command on a 32-bit architecture."
-)
-
-DELETE_MODULE_AUDIT_LINE_64 = attribute(
-  'delete_module_audit_line_64',
-  default: '^-a always,exit -F arch=b64 -S delete_module .*-k \S+\n?$',
-  description: "The line that you use to audit the delete_module command on a 64-bit architecture."
-)
-
 control "V-72189" do
   title "All uses of the delete_module command must be audited."
   desc  "
@@ -83,12 +71,11 @@ those that do not match the CPU architecture):
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe.one do
-    describe auditd_rules do
-      its('lines') { should match %r{#{DELETE_MODULE_AUDIT_LINE_32}} }
-    end
-    describe auditd_rules do
-      its('lines') { should match %r{#{DELETE_MODULE_AUDIT_LINE_64}} }
-    end
+  sys_call = "delete_module"
+
+  describe auditd_rules2.syscall("#{sys_call}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit']}
+    its('fields_nokey.flatten') { should match_array ARCH_FIELD }
   end
 end

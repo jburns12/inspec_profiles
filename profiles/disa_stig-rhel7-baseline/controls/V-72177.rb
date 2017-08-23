@@ -20,10 +20,10 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-POSTQUEUE_AUDIT_LINE = attribute(
-  'postqueue_audit_line',
-  default: '^-a always,exit -F path=/usr/sbin/postqueue -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit postqueue command"
+POSTQUEUE_AUDIT_FIELDS = attribute(
+  'postqueue_audit_fields',
+  default: ['path=/usr/sbin/postqueue', 'perm=x', 'auid>=1000', 'auid!=-1'],
+  description: "The fields that you use to audit setsebool command using auditctl"
 )
 
 control "V-72177" do
@@ -70,7 +70,11 @@ auid!=4294967295 -k privileged-postfix
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{POSTQUEUE_AUDIT_LINE}} }
+  path = '/usr/sbin/postqueue'
+
+  describe auditd_rules2.file("#{path}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit'] }
+    its('fields_nokey.flatten') { should match_array POSTQUEUE_AUDIT_FIELDS }
   end
 end

@@ -67,8 +67,9 @@ Add or update the following file system rule in \"/etc/audit/rules.d/audit.rules
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{^\s-w\s/etc/shadow\s-p\swa\s-k\saudit_rules_usergroup_modification$} }
+  path = '/etc/shadow'
+
+  describe auditd_rules2.file("#{path}") do
+    its('permissions') { should include 'wa' }
   end
-  only_if { package('audit').installed? }
 end

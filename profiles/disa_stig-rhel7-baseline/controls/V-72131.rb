@@ -20,18 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-TRUNCATE_AUDIT_LINE_32 = attribute(
-  'truncate_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S truncate .*-F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit truncate command on a 32-bit architecture"
-)
-
-TRUNCATE_AUDIT_LINE_64 = attribute(
-  'truncate_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S truncate .*-F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit truncate command on a 64-bit architecture"
-)
-
 control "V-72131" do
   title "All uses of the truncate command must be audited."
   desc  "
@@ -88,12 +76,11 @@ auid!=4294967295 -k access
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe.one do
-    describe auditd_rules do
-      its('lines') { should match %r{#{TRUNCATE_AUDIT_LINE_32}} }
-    end
-    describe auditd_rules do
-      its('lines') { should match %r{#{TRUNCATE_AUDIT_LINE_64}} }
-    end
+  sys_call = "truncate"
+
+  describe auditd_rules2.syscall("#{sys_call}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit']}
+    its('fields_nokey.flatten.uniq') { should match_array AUDIT_FIELDS_PERMS }
   end
 end

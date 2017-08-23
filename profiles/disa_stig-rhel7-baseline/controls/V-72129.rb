@@ -20,18 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-OPEN_BY_HANDLE_AT_AUDIT_LINE_32 = attribute(
-  'open_by_handle_at_audit_line_32',
-  default: '^-a always,exit -F arch=b32 .*-S open_by_handle_at .*-F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit open_by_handle_at command on a 32-bit architecture"
-)
-
-OPEN_BY_HANDLE_AT_AUDIT_LINE_64 = attribute(
-  'open_by_handle_at_audit_line_64',
-  default: '^-a always,exit -F arch=b64 .*-S open_by_handle_at .*-F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit open_by_handle_at command on a 64-bit architecture"
-)
-
 control "V-72129" do
   title "All uses of the open_by_handle_at command must be audited."
   desc  "
@@ -88,12 +76,11 @@ auid!=4294967295 -k access
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe.one do
-    describe auditd_rules do
-      its('lines') { should match %r{#{OPEN_BY_HANDLE_AT_AUDIT_LINE_32}} }
-    end
-    describe auditd_rules do
-      its('lines') { should match %r{#{OPEN_BY_HANDLE_AT_AUDIT_LINE_64}} }
-    end
+  sys_call = "open_by_handle_at"
+
+  describe auditd_rules2.syscall("#{sys_call}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit']}
+    its('fields_nokey.flatten.uniq') { should match_array AUDIT_FIELDS_PERMS }
   end
 end

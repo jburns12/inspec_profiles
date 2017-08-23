@@ -20,17 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-FCHOWN_AUDIT_FIELDS = attribute(
-  'fchown_audit_fields',
-  default: [
-    {"arch" => ['arch=b32', 'arch=b64'],
-    "auid_pos" => 'auid>=1000',
-    "auid_neg" => ['auid!=-1', 'auid!=4294967295'],
-    "key" => 'key=perm_mod'},
-    ['arch=b32', 'arch=b64', 'auid>=1000', 'auid!=-1', 'auid!=4294967295', 'key=perm_mod']],
-  description: "The fields that you use to audit the fchown command."
-)
-
 control "V-72099" do
   title "All uses of the fchown command must be audited."
   desc  "
@@ -82,38 +71,9 @@ The audit daemon must be restarted for the changes to take effect."
 
   sys_call = "fchown"
 
-  # Check action and filter
-  describe auditd_rules.syscall("#{sys_call}").action do
-    it { should eq(["always"]) }
-  end
-  describe auditd_rules.syscall("#{sys_call}").action('always').list do
-    it { should eq(["exit"]) }
-  end
-
-  # Check permission fields
-  describe.one do
-    FCHOWN_AUDIT_FIELDS.first['arch'].each do |arch|
-      describe auditd_rules.syscall("#{sys_call}").fields.flatten do
-        it { should include arch }
-      end
-    end
-  end
-  describe auditd_rules.syscall("#{sys_call}").fields.flatten do
-    it { should include FCHOWN_AUDIT_FIELDS.first['auid_pos'] }
-  end
-  describe.one do
-    FCHOWN_AUDIT_FIELDS[0]['auid_neg'].each do |auid_neg|
-      describe auditd_rules.syscall("#{sys_call}").fields.flatten do
-        it { should include auid_neg }
-      end
-    end
-  end
-  describe auditd_rules.syscall("#{sys_call}").fields.flatten do
-    it { should include FCHOWN_AUDIT_FIELDS.first['key'] }
-  end
-
-  # Ensure all rule values are those that are expected
-  describe auditd_rules.syscall("#{sys_call}").fields.flatten do
-    it { should be_in FCHOWN_AUDIT_FIELDS.last }
+  describe auditd_rules2.syscall("#{sys_call}") do
+    its('action') { should eq ['always'] }
+    its('list') { should eq ['exit']}
+    its('fields_nokey.flatten.uniq') { should match_array AUDIT_FIELDS }
   end
 end

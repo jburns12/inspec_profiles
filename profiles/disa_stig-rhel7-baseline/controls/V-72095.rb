@@ -75,7 +75,7 @@ auid!=4294967295 -k setuid/setgid"
   prog_lines = command('find / -xdev -type f \( -perm -4000 -o -perm -2000 \) 2>/dev/null').stdout.split("\n")
 
   prog_lines.each do |prog|
-    describe auditd_rules do
+    describe auditd_rules2 do
      its('lines') { should match %r{^-a always,exit -F #{prog} -F perm=x -F auid>=1000 -F auid!=4294967295 -k \S+\n?$} }
     end
   end

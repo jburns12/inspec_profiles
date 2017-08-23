@@ -20,12 +20,6 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-INSMOD_AUDIT_LINE = attribute(
-  'insmod_audit_line',
-  default: '^-w /sbin/insmod -p x -F auid!=4294967295 -k \S+\n?$',
-  description: "The line that you use to audit insmod command"
-)
-
 control "V-72191" do
   title "All uses of the insmod command must be audited."
   desc  "
@@ -70,7 +64,9 @@ those that do not match the CPU architecture):
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should match %r{#{INSMOD_AUDIT_LINE}} }
+  path = '/sbin/insmod'
+
+  describe auditd_rules2.file("#{path}") do
+    its('permissions') { should include 'x' }
   end
 end

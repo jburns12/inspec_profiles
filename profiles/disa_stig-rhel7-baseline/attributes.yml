@@ -88,3 +88,5 @@ audit_lines: [
  log_pkg_path: '/etc/rsyslog.conf'
  rhel7_fs_opts: ['xfs', 'ext4', 'swap', 'tmpfs']
  system_accounts: ['root', 'bin', 'daemon']
+ audit_fields_32: ['arch=b32', 'auid>=1000', 'auid!=-1']
+ audit_fields_64: ['arch=b64', 'auid>=1000', 'auid!=-1']

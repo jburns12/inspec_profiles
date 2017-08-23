@@ -89,7 +89,7 @@ Kernel log monitoring must also be configured to properly alert designated staff
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules  do
+  describe auditd_rules2  do
     its('lines') { should match %r{-f [1-2]} }
   end
 end
