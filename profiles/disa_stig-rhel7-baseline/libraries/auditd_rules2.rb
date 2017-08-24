@@ -186,7 +186,7 @@ require 'utils/filter_array'
     end
 
     def is_file?(line)
-      line.match(/-w .+ -p/)
+      line.match(/-w /)
     end
 
     def is_file_syscall_syntax?(line)
@@ -203,9 +203,7 @@ require 'utils/filter_array'
 
     # NB only in file lines
     def get_key(line)
-      if line.match(/-k/)
-        line.match(/-k ([^ ]+)/)[1]
-      end
+      line.match(/-k ([^ ]+)/)[1] if line =~ /-k/
     end
 
     # NOTE there are NO precautions wrt. filenames containing spaces in auditctl

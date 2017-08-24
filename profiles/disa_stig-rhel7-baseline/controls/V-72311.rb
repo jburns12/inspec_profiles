@@ -60,3 +60,4 @@ Ensure the \"sec\" option is defined as \"krb5:krb5i:krb5p\"."
       its ( 'mount_options' ) { should include '\'sec=krb5:krb5i:krb5p\'' }
     end
   end
+end
